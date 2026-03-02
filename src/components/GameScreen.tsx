@@ -59,7 +59,7 @@ export function GameScreen({ state, onFeed, onPlay, onSleep, onReset }: Props) {
           {getEmoji(state)}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#555' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#aaa' }}>
           <span>Etapa: <strong>{getStageName(stage)}</strong></span>
           <span>Edad: <strong>{Math.floor(age / 60)}m {age % 60}s</strong></span>
           <span>{getMood(state)}</span>
@@ -69,16 +69,16 @@ export function GameScreen({ state, onFeed, onPlay, onSleep, onReset }: Props) {
       {/* Stats */}
       {!isDead && !isEgg && (
         <div className="nes-container" style={{ marginBottom: '1rem' }}>
-          <StatBar label="Hambre" icon="🍖" value={hunger} color="#ff6b35" />
-          <StatBar label="Felicidad" icon="❤️" value={happiness} color="#ff85a1" />
-          <StatBar label="Energía" icon="⚡" value={energy} color="#ffe66d" />
+          <StatBar label="Hambre" icon="🍖" value={hunger} nesClass="is-error" />
+          <StatBar label="Felicidad" icon="❤️" value={happiness} nesClass="is-primary" />
+          <StatBar label="Energía" icon="⚡" value={energy} nesClass="is-warning" />
         </div>
       )}
 
       {isEgg && (
         <div className="nes-container is-centered" style={{ marginBottom: '1rem' }}>
           <p>⏳ Tu huevo está incubando...</p>
-          <p style={{ fontSize: '0.75rem', color: '#888' }}>Nacerá pronto 🐣</p>
+          <p style={{ fontSize: '0.75rem', color: '#aaa' }}>Nacerá pronto 🐣</p>
         </div>
       )}
 

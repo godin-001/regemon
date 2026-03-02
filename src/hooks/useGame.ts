@@ -37,7 +37,8 @@ export function useGame() {
         const newAge = prev.age + 5;
 
         let newStage: LifeStage = prev.stage;
-        if (newHunger === 0 && newHappiness === 0) {
+        // Muere si hambre O felicidad llegan a 0 (negligencia)
+        if (newHunger === 0 || (newHappiness === 0 && newEnergy === 0)) {
           newStage = 'dead';
         } else if (newAge >= 120 && prev.stage === 'baby') {
           newStage = 'adult';

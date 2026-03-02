@@ -9,7 +9,7 @@ export function SelectScreen({ onSelect }: Props) {
   return (
     <div className="nes-container with-title is-centered" style={{ maxWidth: 600, margin: '0 auto' }}>
       <p className="title">🥚 ELIGE TU REGEMON</p>
-      <p style={{ marginBottom: '2rem', color: '#555' }}>
+      <p style={{ marginBottom: '2rem', color: '#bbb' }}>
         Tu compañero digital te necesita. ¿Cuál eleges?
       </p>
       <div
@@ -22,7 +22,7 @@ export function SelectScreen({ onSelect }: Props) {
         {MONSTERS.map((m) => (
           <div
             key={m.id}
-            className="nes-container is-rounded"
+            className="nes-container"
             style={{
               cursor: 'pointer',
               borderColor: m.color,
@@ -37,7 +37,7 @@ export function SelectScreen({ onSelect }: Props) {
             <p style={{ fontWeight: 'bold', margin: '0.5rem 0 0.25rem', color: m.color }}>
               {m.name}
             </p>
-            <p style={{ fontSize: '0.7rem', color: '#666', margin: 0 }}>{m.description}</p>
+            <p style={{ fontSize: '0.7rem', color: '#bbb', margin: 0 }}>{m.description}</p>
           </div>
         ))}
       </div>

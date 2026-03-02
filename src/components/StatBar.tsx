@@ -2,10 +2,10 @@ interface Props {
   label: string;
   icon: string;
   value: number;
-  color: string;
+  nesClass: 'is-success' | 'is-warning' | 'is-error' | 'is-primary';
 }
 
-export function StatBar({ label, icon, value, color }: Props) {
+export function StatBar({ label, icon, value, nesClass }: Props) {
   const pct = Math.round(value);
 
   return (
@@ -14,11 +14,10 @@ export function StatBar({ label, icon, value, color }: Props) {
         <span style={{ fontSize: '0.8rem' }}>
           {icon} {label}
         </span>
-        <span style={{ fontSize: '0.8rem', color }}>{pct}%</span>
+        <span style={{ fontSize: '0.8rem', color: '#e0e0e0' }}>{pct}%</span>
       </div>
       <progress
-        className="nes-progress"
-        style={{ color } as React.CSSProperties}
+        className={`nes-progress ${nesClass}`}
         value={pct}
         max={100}
       />
