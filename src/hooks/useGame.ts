@@ -1,6 +1,65 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { GameState, Monster, LifeStage } from '../types';
 
+// Cada tipo tiene su propio perfil de decay y valores iniciales
+const ELEMENT_PROFILES = {
+  fire: {
+    // Ignimon: se muere de hambre rápido, pero tiene energía natural de sobra
+    hungerDecay: 3.5,    // ⬆ muy rápido — necesita comer seguido
+    happinessDecay: 1.5, // medio — necesita estimulación
+    energyDecay: 0.8,    // ⬇ lento — es naturalmente energético
+    initialHunger: 90,
+    initialHappiness: 70,
+    initialEnergy: 95,
+    feedBonus: 30,       // le encanta comer
+    playBonus: 25,
+    sleepBonus: 35,
+  },
+  water: {
+    // Aquamon: metabolismo lento pero necesita compañía
+    hungerDecay: 1.2,    // ⬇ lento — metabolismo eficiente
+    happinessDecay: 2.5, // ⬆ rápido — necesita interacción social
+    energyDecay: 1.5,    // medio
+    initialHunger: 75,
+    initialHappiness: 90,
+    initialEnergy: 80,
+    feedBonus: 20,
+    playBonus: 35,       // jugar lo hace muy feliz
+    sleepBonus: 45,
+  },
+  earth: {
+    // Terramon: equilibrado pero le cuesta recuperar energía
+    hungerDecay: 2.0,    // medio
+    happinessDecay: 0.7, // ⬇ muy lento — es tranquilo y estable
+    energyDecay: 2.2,    // ⬆ medio-alto — le cuesta moverse
+    initialHunger: 85,
+    initialHappiness: 80,
+    initialEnergy: 65,   // empieza con poca energía
+    feedBonus: 25,
+    playBonus: 20,
+    sleepBonus: 55,      // duerme muy bien
+  },
+  air: {
+    // Ventomon: siempre moviéndose — se queda sin energía rápido
+    hungerDecay: 1.8,    // medio
+    happinessDecay: 0.6, // ⬇ muy lento — espíritu libre
+    energyDecay: 3.2,    // ⬆⬆ muy rápido — siempre activo
+    initialHunger: 80,
+    initialHappiness: 85,
+    initialEnergy: 95,   // empieza lleno pero se va rápido
+    feedBonus: 22,
+    playBonus: 30,
+    sleepBonus: 40,
+  },
+} as const;
+
+type ElementProfile = typeof ELEMENT_PROFILES[keyof typeof ELEMENT_PROFILES];
+
+function getProfile(monster: Monster | null): ElementProfile {
+  if (!monster) return ELEMENT_PROFILES.fire;
+  return ELEMENT_PROFILES[monster.id] ?? ELEMENT_PROFILES.fire;
+}
+
 const INITIAL_STATE: GameState = {
   chosen: false,
   monster: null,
@@ -20,25 +79,24 @@ export function useGame() {
     return saved ? JSON.parse(saved) : INITIAL_STATE;
   });
 
-  // Save to localStorage whenever state changes
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  // Game tick — stats decay over time
+  // Game tick — cada tipo decae a su propio ritmo
   useEffect(() => {
     if (!state.chosen || state.stage === 'dead') return;
 
     const interval = setInterval(() => {
       setState((prev) => {
-        const newHunger = Math.max(0, prev.hunger - 2);
-        const newHappiness = Math.max(0, prev.happiness - 1);
-        const newEnergy = Math.max(0, prev.energy - 1.5);
-        const newAge = prev.age + 5;
+        const profile = getProfile(prev.monster);
+        const newHunger    = Math.max(0, prev.hunger    - profile.hungerDecay);
+        const newHappiness = Math.max(0, prev.happiness - profile.happinessDecay);
+        const newEnergy    = Math.max(0, prev.energy    - profile.energyDecay);
+        const newAge       = prev.age + 5;
 
         let newStage: LifeStage = prev.stage;
-        // Muere si hambre O felicidad llegan a 0 (negligencia)
-        if (newHunger === 0 || (newHappiness === 0 && newEnergy === 0)) {
+        if (newHunger === 0 || (newHappiness <= 0 && newEnergy <= 0)) {
           newStage = 'dead';
         } else if (newAge >= 120 && prev.stage === 'baby') {
           newStage = 'adult';
@@ -62,39 +120,57 @@ export function useGame() {
   }, [state.chosen, state.stage]);
 
   const chooseMonster = useCallback((monster: Monster) => {
-    setState({ ...INITIAL_STATE, chosen: true, monster, lastUpdate: Date.now() });
+    const profile = getProfile(monster);
+    setState({
+      ...INITIAL_STATE,
+      chosen: true,
+      monster,
+      hunger:    profile.initialHunger,
+      happiness: profile.initialHappiness,
+      energy:    profile.initialEnergy,
+      lastUpdate: Date.now(),
+    });
   }, []);
 
   const feed = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      hunger: Math.min(100, prev.hunger + 25),
-      happiness: Math.min(100, prev.happiness + 5),
-    }));
+    setState((prev) => {
+      const { feedBonus } = getProfile(prev.monster);
+      return {
+        ...prev,
+        hunger:    Math.min(100, prev.hunger + feedBonus),
+        happiness: Math.min(100, prev.happiness + 5),
+      };
+    });
   }, []);
 
   const play = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      happiness: Math.min(100, prev.happiness + 20),
-      energy: Math.max(0, prev.energy - 15),
-    }));
+    setState((prev) => {
+      const { playBonus } = getProfile(prev.monster);
+      return {
+        ...prev,
+        happiness: Math.min(100, prev.happiness + playBonus),
+        energy:    Math.max(0,   prev.energy - 15),
+      };
+    });
   }, []);
 
   const sleep = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      energy: Math.min(100, prev.energy + 40),
-      happiness: Math.min(100, prev.happiness + 5),
-    }));
+    setState((prev) => {
+      const { sleepBonus } = getProfile(prev.monster);
+      return {
+        ...prev,
+        energy:    Math.min(100, prev.energy + sleepBonus),
+        happiness: Math.min(100, prev.happiness + 5),
+      };
+    });
   }, []);
 
   const chatStatEffect = useCallback((dHunger: number, dHappiness: number, dEnergy: number) => {
     setState((prev) => ({
       ...prev,
-      hunger: Math.min(100, Math.max(0, prev.hunger + dHunger)),
+      hunger:    Math.min(100, Math.max(0, prev.hunger    + dHunger)),
       happiness: Math.min(100, Math.max(0, prev.happiness + dHappiness)),
-      energy: Math.min(100, Math.max(0, prev.energy + dEnergy)),
+      energy:    Math.min(100, Math.max(0, prev.energy    + dEnergy)),
     }));
   }, []);
 
