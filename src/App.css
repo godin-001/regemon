@@ -26,11 +26,38 @@ body {
   letter-spacing: 2px;
 }
 
+/* ── Pet bounce ── */
 @keyframes bounce {
   from { transform: translateY(0px); }
-  to { transform: translateY(-12px); }
+  to   { transform: translateY(-12px); }
 }
 
+/* ── Chat message appear ── */
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Floating stat text ── */
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+
+/* ── Typing dots ── */
+.typing-dots::after {
+  content: '';
+  animation: dots 1.2s infinite steps(4, end);
+}
+@keyframes dots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
+
+/* ── NES overrides for dark theme ── */
 .nes-container {
   background-color: #0f3460 !important;
   border-color: #e0e0e0 !important;
@@ -44,7 +71,7 @@ body {
 
 .nes-container .title {
   background-color: #16213e !important;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .nes-btn {
@@ -53,7 +80,27 @@ body {
   cursor: pointer;
 }
 
+.nes-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nes-input {
+  font-family: inherit !important;
+  font-size: 0.7rem !important;
+}
+
 .nes-progress {
   width: 100%;
   height: 20px;
+}
+
+/* ── Hunger critical: red flash ── */
+@keyframes hungerFlash {
+  0%, 100% { background-color: #0f3460; }
+  50%       { background-color: #3a0a0a; }
+}
+
+.hunger-critical {
+  animation: hungerFlash 0.8s infinite;
 }

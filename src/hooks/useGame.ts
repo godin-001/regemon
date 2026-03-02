@@ -89,10 +89,19 @@ export function useGame() {
     }));
   }, []);
 
+  const chatStatEffect = useCallback((dHunger: number, dHappiness: number, dEnergy: number) => {
+    setState((prev) => ({
+      ...prev,
+      hunger: Math.min(100, Math.max(0, prev.hunger + dHunger)),
+      happiness: Math.min(100, Math.max(0, prev.happiness + dHappiness)),
+      energy: Math.min(100, Math.max(0, prev.energy + dEnergy)),
+    }));
+  }, []);
+
   const reset = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     setState(INITIAL_STATE);
   }, []);
 
-  return { state, chooseMonster, feed, play, sleep, reset };
+  return { state, chooseMonster, feed, play, sleep, chatStatEffect, reset };
 }

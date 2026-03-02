@@ -15,9 +15,22 @@ export interface GameState {
   chosen: boolean;
   monster: Monster | null;
   stage: LifeStage;
-  hunger: number;      // 0-100 (100 = full)
-  happiness: number;   // 0-100 (100 = max happy)
-  energy: number;      // 0-100 (100 = full energy)
-  age: number;         // in seconds
+  hunger: number;
+  happiness: number;
+  energy: number;
+  age: number;
   lastUpdate: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: number;
+}
+
+export interface Memory {
+  key: string;
+  value: string;
+  savedAt: number;
 }
