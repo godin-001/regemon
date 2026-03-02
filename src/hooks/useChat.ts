@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import type { ChatMessage, Memory, GameState } from '../types';
+import { generateMockResponse } from '../lib/mockAI';
 
 const CHAT_KEY = 'regemon_chat';
 const MEMORY_KEY = 'regemon_memories';
@@ -132,32 +133,41 @@ export function useChat(state: GameState, onStatEffect: (dHunger: number, dHappi
 
     try {
       const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-      if (!apiKey || apiKey === 'placeholder') {
-        throw new Error('NO_KEY');
-      }
+      const hasRealKey = apiKey && apiKey !== 'placeholder' && apiKey.startsWith('sk-');
 
       // Small delay for natural feel
-      await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
+      await new Promise(r => setTimeout(r, 500 + Math.random() * 700));
 
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          max_tokens: 100,
-          messages: [
-            { role: 'system', content: buildSystemPrompt(state, updatedMemories) },
-            ...newMessages.slice(-8).map(m => ({ role: m.role, content: m.content })),
-          ],
-        }),
-      });
+      let replyText: string;
 
-      if (!response.ok) throw new Error(`API error ${response.status}`);
-      const data = await response.json();
-      const replyText = data.choices?.[0]?.message?.content ?? '...';
+      if (!hasRealKey) {
+        // Demo mode: smart rule-based AI
+        replyText = generateMockResponse(text.trim(), newMessages, state, updatedMemories);
+      } else {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            max_tokens: 100,
+            messages: [
+              { role: 'system', content: buildSystemPrompt(state, updatedMemories) },
+              ...newMessages.slice(-10).map(m => ({ role: m.role, content: m.content })),
+            ],
+          }),
+        });
+
+        if (!response.ok) {
+          // Fallback to mock if API fails
+          replyText = generateMockResponse(text.trim(), newMessages, state, updatedMemories);
+        } else {
+          const data = await response.json();
+          replyText = data.choices?.[0]?.message?.content ?? generateMockResponse(text.trim(), newMessages, state, updatedMemories);
+        }
+      }
 
       const assistantMsg: ChatMessage = {
         id: `a_${Date.now()}`,
@@ -169,12 +179,9 @@ export function useChat(state: GameState, onStatEffect: (dHunger: number, dHappi
       const withReply = [...newMessages, assistantMsg].slice(-MAX_MESSAGES);
       setMessages(withReply);
       saveMessages(withReply);
-    } catch (err: unknown) {
-      const isNoKey = err instanceof Error && err.message === 'NO_KEY';
-      const fallback = isNoKey
-        ? `¡Hola! 👋 Configura tu VITE_OPENAI_API_KEY para que pueda responder de verdad. Por ahora... ¡guau guau! 🐾`
-        : `Ups, algo salió mal 😅 ¡Inténtalo de nuevo!`;
-
+    } catch {
+      // Always fallback to mock AI, never show error to user
+      const fallback = generateMockResponse(text.trim(), newMessages, state, updatedMemories);
       const errMsg: ChatMessage = {
         id: `e_${Date.now()}`,
         role: 'assistant',
