@@ -1,0 +1,59 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #1a1a2e;
+  min-height: 100vh;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  max-width: 640px;
+  margin: 0 auto;
+  background-color: #16213e;
+  color: #e0e0e0;
+}
+
+.gradient-title {
+  font-size: 1.8rem;
+  background: linear-gradient(90deg, #ff6b35, #a29bfe, #4ecdc4, #a8e063);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.25rem;
+  letter-spacing: 2px;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-12px); }
+}
+
+.nes-container {
+  background-color: #0f3460 !important;
+  border-color: #e0e0e0 !important;
+  color: #e0e0e0 !important;
+}
+
+.nes-container.is-dark {
+  background-color: #1a0a0a !important;
+  border-color: #ff6b6b !important;
+}
+
+.nes-container .title {
+  background-color: #16213e !important;
+  font-size: 0.9rem;
+}
+
+.nes-btn {
+  font-family: inherit !important;
+  font-size: 0.7rem !important;
+  cursor: pointer;
+}
+
+.nes-progress {
+  width: 100%;
+  height: 20px;
+}
