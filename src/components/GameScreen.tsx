@@ -3,6 +3,7 @@ import type { GameState, TrainingState, TrainingCategory, EvaluateResult } from 
 import { StatBar } from './StatBar';
 import { FloatingStat } from './FloatingStat';
 import { TrainingScreen } from './TrainingScreen';
+import { RegisterHub } from './RegisterHub';
 import { MonsterSprite } from '../sprites/MonsterSprite';
 import { STAGE_LABELS } from '../hooks/useTraining';
 
@@ -22,6 +23,8 @@ interface Props {
   onReset: () => void;
   floatItems?: FloatItem[];
   onFloatDone?: (id: string) => void;
+  ownerName?: string | null;
+  ownerEmail?: string | null;
 }
 
 
@@ -45,7 +48,8 @@ export function GameScreen({
   state, isLoggedIn, canAfford,
   training, isEvaluating, onEvaluate,
   onFeed, onFeedWithCoins, onPlay, onSleep, onReset,
-  floatItems = [], onFloatDone
+  floatItems = [], onFloatDone,
+  ownerName, ownerEmail,
 }: Props) {
   const { monster, stage, hunger, happiness, energy, age } = state;
   const isDead = stage === 'dead';
@@ -53,7 +57,7 @@ export function GameScreen({
   const isCriticalHunger = hunger < 10 && !isDead;
   const FEED_COST = 10;
 
-  const [activeTab, setActiveTab] = useState<'stats' | 'train'>('stats');
+  const [activeTab, setActiveTab] = useState<'stats' | 'train' | 'social'>('stats');
   const [reaction, setReaction] = useState('');
   const [processing, setProcessing] = useState(false);
 
@@ -147,16 +151,16 @@ export function GameScreen({
         </div>
       </div>
 
-      {/* ── Tabs (Stats / Entrenar) — hidden while egg/dead ─────────────────── */}
+      {/* ── Tabs (Stats / Entrenar / Social) ─────────────────────────────────── */}
       {!isDead && !isEgg && (
         <div className="anime-tabs">
-          {(['stats', 'train'] as const).map(tab => (
+          {(['stats', 'train', 'social'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`anime-tab ${activeTab === tab ? 'active' : ''}`}
             >
-              {tab === 'stats' ? '🐾 Stats' : '🎓 Entrenar'}
+              {tab === 'stats' ? '🐾 Stats' : tab === 'train' ? '🎓 Entrenar' : '🌐 Social'}
             </button>
           ))}
         </div>
@@ -205,6 +209,16 @@ export function GameScreen({
           training={training}
           isEvaluating={isEvaluating}
           onEvaluate={onEvaluate}
+        />
+      )}
+
+      {/* ── Social / HUB tab ─────────────────────────────────────────────────── */}
+      {!isDead && !isEgg && activeTab === 'social' && (
+        <RegisterHub
+          gameState={state}
+          ownerName={ownerName ?? 'Trainer'}
+          ownerEmail={ownerEmail}
+          totalPoints={training.totalPoints}
         />
       )}
 

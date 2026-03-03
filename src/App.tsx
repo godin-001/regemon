@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import 'nes.css/css/nes.min.css';
 import './App.css';
 import { useGame } from './hooks/useGame';
@@ -6,11 +7,14 @@ import { useChat } from './hooks/useChat';
 import { useAuth } from './hooks/useAuth';
 import { useFruta } from './hooks/useFruta';
 import { useTraining } from './hooks/useTraining';
+import { useHubSync } from './hooks/useHubSync';
 import { SelectScreen } from './components/SelectScreen';
 import { GameScreen } from './components/GameScreen';
 import { ChatBox } from './components/ChatBox';
 import { Header } from './components/Header';
 import { History } from './components/History';
+import Leaderboard from './pages/Leaderboard';
+import RegenmonProfile from './pages/RegenmonProfile';
 import type { TrainingCategory } from './types';
 
 interface FloatItem { id: string; text: string; color: string; }
@@ -41,10 +45,11 @@ function SakuraPetals() {
 }
 
 function App() {
-  const { ready, isLoggedIn, userName, storageKey, login, logout } = useAuth();
+  const { ready, isLoggedIn, userName, userEmail, storageKey, login, logout } = useAuth();
   const { state, chooseMonster, feed, play, sleep, chatStatEffect, reset } = useGame(storageKey);
   const { coins, history, floatEvents, spend, earnFromChat, earnDirect, canAfford } = useFruta(storageKey, isLoggedIn);
   const { training, isEvaluating, evaluate } = useTraining(storageKey);
+  useHubSync(state, training);
   const [floatItems, setFloatItems] = useState<FloatItem[]>([]);
 
   // Merge coin floats + stat floats
@@ -114,7 +119,8 @@ function App() {
     );
   }
 
-  return (
+  // ── Main game view (shared layout) ────────────────────
+  const MainGame = (
     <div className="app-wrapper">
       <SakuraPetals />
       <Header
@@ -144,6 +150,8 @@ function App() {
               onReset={handleReset}
               floatItems={allFloats}
               onFloatDone={removeFloat}
+              ownerName={userName}
+              ownerEmail={userEmail}
             />
 
             {state.stage !== 'dead' && state.stage !== 'egg' && (
@@ -166,6 +174,15 @@ function App() {
         Frutero Club 🍌 · {new Date().getFullYear()}
       </footer>
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={MainGame} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route path="/regenmon/:id" element={<RegenmonProfile />} />
+      <Route path="*" element={MainGame} />
+    </Routes>
   );
 }
 
