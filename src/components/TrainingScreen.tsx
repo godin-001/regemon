@@ -62,6 +62,7 @@ export function TrainingScreen({ monsterName, training, isEvaluating, onEvaluate
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [result, setResult] = useState<EvaluateResult | null>(null);
   const [evolutionAlert, setEvolutionAlert] = useState('');
+  const [evalError, setEvalError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categories: TrainingCategory[] = ['codigo', 'diseno', 'proyecto', 'aprendizaje'];
@@ -78,9 +79,17 @@ export function TrainingScreen({ monsterName, training, isEvaluating, onEvaluate
     const reader = new FileReader();
     reader.onload = (ev) => {
       const dataUrl = ev.target?.result as string;
+      if (!dataUrl) {
+        alert('❌ No se pudo leer la imagen. Intenta con otra.');
+        return;
+      }
       setImagePreview(dataUrl);
       setImageBase64(dataUrl);
       setResult(null);
+      setEvalError('');
+    };
+    reader.onerror = () => {
+      alert('❌ Error al leer el archivo. Intenta con otra imagen.');
     };
     reader.readAsDataURL(file);
   }, []);
@@ -94,17 +103,23 @@ export function TrainingScreen({ monsterName, training, isEvaluating, onEvaluate
 
   const handleEvaluate = useCallback(async () => {
     if (!imageBase64 || !selectedCategory || isEvaluating) return;
-    const res = await onEvaluate(imageBase64, selectedCategory);
-    setResult(res);
-    if (res.didEvolve) {
-      setEvolutionAlert(
-        `🎉 ¡${monsterName} evolucionó a ${STAGE_LABELS[res.newStage]}! +100 🍊 de bonus`,
-      );
-      setTimeout(() => setEvolutionAlert(''), 5000);
+    setEvalError('');
+    try {
+      const res = await onEvaluate(imageBase64, selectedCategory);
+      setResult(res);
+      if (res.didEvolve) {
+        setEvolutionAlert(
+          `🎉 ¡${monsterName} evolucionó a ${STAGE_LABELS[res.newStage]}! +100 🍊 de bonus`,
+        );
+        setTimeout(() => setEvolutionAlert(''), 5000);
+      }
+      setImagePreview(null);
+      setImageBase64(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } catch (err) {
+      console.error('Error evaluando imagen:', err);
+      setEvalError('Hubo un error al evaluar. Intenta con otra imagen o categoría.');
     }
-    setImagePreview(null);
-    setImageBase64(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
   }, [imageBase64, selectedCategory, isEvaluating, onEvaluate, monsterName]);
 
   const handleReset = useCallback(() => {
@@ -326,6 +341,11 @@ export function TrainingScreen({ monsterName, training, isEvaluating, onEvaluate
                 {!selectedCategory && (
                   <p style={{ fontSize: '0.6rem', color: '#ff6b6b', marginTop: '0.3rem', textAlign: 'center' }}>
                     ⬆️ Primero elige una categoría
+                  </p>
+                )}
+                {evalError && (
+                  <p style={{ fontSize: '0.6rem', color: '#ff6b6b', marginTop: '0.3rem', textAlign: 'center' }}>
+                    ⚠️ {evalError}
                   </p>
                 )}
               </>

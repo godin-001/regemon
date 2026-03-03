@@ -56,20 +56,24 @@ function App() {
   }, [spend, feed]);
 
   const handleEvaluate = useCallback(async (imageBase64: string, category: TrainingCategory) => {
-    const result = await evaluate(
-      imageBase64,
-      category,
-      (dHunger, dHappiness, dEnergy) => {
-        chatStatEffect(dHunger, dHappiness, dEnergy);
-        // Floating indicators for training
-        if (dHappiness > 0) setFloatItems(prev => [...prev, { id: `t_h_${Date.now()}`, text: `+${dHappiness} ❤️`, color: '#ff85a1' }]);
-        if (dHappiness < 0) setFloatItems(prev => [...prev, { id: `t_hn_${Date.now()}`, text: `${dHappiness} ❤️`, color: '#ff6b6b' }]);
-        if (dEnergy < 0) setFloatItems(prev => [...prev, { id: `t_e_${Date.now()}`, text: `${dEnergy} ⚡`, color: '#ffe66d' }]);
-        if (dHunger > 0) setFloatItems(prev => [...prev, { id: `t_f_${Date.now()}`, text: `+${dHunger} 🍖`, color: '#ff922b' }]);
-      },
-      earnDirect,
-    );
-    return result;
+    try {
+      const result = await evaluate(
+        imageBase64,
+        category,
+        (dHunger, dHappiness, dEnergy) => {
+          chatStatEffect(dHunger, dHappiness, dEnergy);
+          if (dHappiness > 0) setFloatItems(prev => [...prev, { id: `t_h_${Date.now()}`, text: `+${dHappiness} ❤️`, color: '#ff85a1' }]);
+          if (dHappiness < 0) setFloatItems(prev => [...prev, { id: `t_hn_${Date.now()}`, text: `${dHappiness} ❤️`, color: '#ff6b6b' }]);
+          if (dEnergy < 0) setFloatItems(prev => [...prev, { id: `t_e_${Date.now()}`, text: `${dEnergy} ⚡`, color: '#ffe66d' }]);
+          if (dHunger > 0) setFloatItems(prev => [...prev, { id: `t_f_${Date.now()}`, text: `+${dHunger} 🍖`, color: '#ff922b' }]);
+        },
+        earnDirect,
+      );
+      return result;
+    } catch (err) {
+      console.error('handleEvaluate error:', err);
+      throw err; // re-throw so TrainingScreen can catch and show the error message
+    }
   }, [evaluate, chatStatEffect, earnDirect]);
 
   const handleReset = useCallback(() => {

@@ -157,60 +157,68 @@ export function useTraining(storageKey: string) {
     ): Promise<EvaluateResult> => {
       setIsEvaluating(true);
 
-      const { score, feedback } = await evaluateWithAI(imageBase64, category);
+      try {
+        const { score, feedback } = await evaluateWithAI(imageBase64, category);
 
-      // Rewards
-      const points = score;
-      const tokens = Math.floor(score * 0.5);
+        // Rewards
+        const points = score;
+        const tokens = Math.floor(score * 0.5);
 
-      // Stat effects by score bracket
-      let dHunger = 0, dHappiness = 0, dEnergy = 0;
-      if (score >= 80) {
-        dHunger = 15; dHappiness = 15; dEnergy = -20;
-      } else if (score >= 60) {
-        dHunger = 12; dHappiness = 8; dEnergy = -15;
-      } else if (score >= 40) {
-        dHunger = 10; dHappiness = 3; dEnergy = -12;
-      } else {
-        dHunger = 10; dHappiness = -10; dEnergy = -15;
-      }
+        // Stat effects by score bracket
+        let dHunger = 0, dHappiness = 0, dEnergy = 0;
+        if (score >= 80) {
+          dHunger = 15; dHappiness = 15; dEnergy = -20;
+        } else if (score >= 60) {
+          dHunger = 12; dHappiness = 8; dEnergy = -15;
+        } else if (score >= 40) {
+          dHunger = 10; dHappiness = 3; dEnergy = -12;
+        } else {
+          dHunger = 10; dHappiness = -10; dEnergy = -15;
+        }
 
-      onStatEffect(dHunger, dHappiness, dEnergy);
-      earnDirect(tokens, `🎓 Entrenamiento +${tokens} 🍊`);
+        onStatEffect(dHunger, dHappiness, dEnergy);
+        earnDirect(tokens, `🎓 Entrenamiento +${tokens} 🍊`);
 
-      // Compute evolution BEFORE setState (using current snapshot from closure)
-      const newTotalPoints = training.totalPoints + points;
-      const newStage = getStage(newTotalPoints);
-      const didEvolve = newStage > training.trainingStage;
+        // Compute evolution BEFORE setState (using current snapshot from closure)
+        const newTotalPoints = training.totalPoints + points;
+        const newStage = getStage(newTotalPoints);
+        const didEvolve = newStage > training.trainingStage;
 
-      // Update training state
-      setTraining(prev => {
-        const prevPoints = prev.totalPoints + points;
-        const entry = { score, category, timestamp: Date.now() };
+        // Update training state
+        setTraining(prev => {
+          const prevPoints = prev.totalPoints + points;
+          const entry = { score, category, timestamp: Date.now() };
+          return {
+            totalPoints: prevPoints,
+            trainingStage: getStage(prevPoints),
+            trainingHistory: [entry, ...prev.trainingHistory].slice(0, 20),
+          };
+        });
+
+        if (didEvolve) {
+          earnDirect(100, `🎉 Bonus Evolución +100 🍊`);
+        }
+
+        return { score, feedback, points, tokens, dHunger, dHappiness, dEnergy, didEvolve, newStage };
+
+      } catch (err) {
+        console.error('useTraining.evaluate error:', err);
+        // Graceful fallback — default score so the UI recovers
+        const fallbackScore = 45 + Math.floor(Math.random() * 16); // 45-60
+        const fallbackTokens = Math.floor(fallbackScore * 0.5);
+        earnDirect(fallbackTokens, `🎓 Entrenamiento +${fallbackTokens} 🍊`);
         return {
-          totalPoints: prevPoints,
-          trainingStage: getStage(prevPoints),
-          trainingHistory: [entry, ...prev.trainingHistory].slice(0, 20),
+          score: fallbackScore,
+          feedback: '⚠️ Sistema de evaluación temporalmente no disponible. Score por defecto asignado.',
+          points: fallbackScore,
+          tokens: fallbackTokens,
+          dHunger: 10, dHappiness: 3, dEnergy: -12,
+          didEvolve: false,
+          newStage: training.trainingStage,
         };
-      });
-
-      if (didEvolve) {
-        earnDirect(100, `🎉 Bonus Evolución +100 🍊`);
+      } finally {
+        setIsEvaluating(false);
       }
-
-      setIsEvaluating(false);
-
-      return {
-        score,
-        feedback,
-        points,
-        tokens,
-        dHunger,
-        dHappiness,
-        dEnergy,
-        didEvolve,
-        newStage,
-      };
     },
     [training],
   );
