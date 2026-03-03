@@ -24,6 +24,11 @@ async function fetchHub<T>(
   }
 }
 
+// ── Text normalizer (HUB API no soporta acentos) ──────────
+export function deaccent(text: string): string {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 // ── Sprite helper ──────────────────────────────────────────
 export function getSpriteUrl(emoji: string): string {
   try {
@@ -101,9 +106,15 @@ export async function registerHub(body: {
   appUrl: string;
   sprite: string;
 }): Promise<HubProfile> {
+  // Normalize text fields — HUB API returns 500 for accented characters
+  const safeBody = {
+    ...body,
+    name: deaccent(body.name),
+    ownerName: deaccent(body.ownerName),
+  };
   const res = await fetchHub<{ success: boolean; data: HubProfile & { alreadyRegistered?: boolean } }>(
     '/register',
-    { method: 'POST', body: JSON.stringify(body) },
+    { method: 'POST', body: JSON.stringify(safeBody) },
   );
   if (!res.success) throw new Error('Register failed');
   saveRegistration(res.data.id, res.data.balance ?? 0);
@@ -160,7 +171,7 @@ export async function getMessages(targetId: string) {
 export async function sendMessage(targetId: string, fromId: string, fromName: string, message: string) {
   return fetchHub<{ data: HubMessage }>(
     `/regenmon/${targetId}/messages`,
-    { method: 'POST', body: JSON.stringify({ fromRegenmonId: fromId, fromName, message }) },
+    { method: 'POST', body: JSON.stringify({ fromRegenmonId: fromId, fromName: deaccent(fromName), message }) },
   );
 }
 

@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  registerHub, getSpriteUrl, getActivity,
+  registerHub, getSpriteUrl, deaccent, getActivity,
   isRegistered as checkRegistered, getHubId, getHubBalance,
   LS,
 } from '../hooks/useHub';
@@ -158,10 +158,10 @@ export function RegisterHub({ gameState, ownerName, ownerEmail, totalPoints }: P
   const [error, setError]           = useState('');
 
   const monster   = gameState.monster;
-  const name      = monster?.name ?? 'Regemon';
+  const name      = deaccent(monster?.name ?? 'Regemon');   // 'Dragón' → 'Dragon'
   const emoji     = monster?.emoji ?? '🎮';
-  const owner     = ownerName ?? 'Trainer';
-  const spriteUrl = getSpriteUrl(emoji);
+  const owner     = deaccent(ownerName ?? 'Trainer');
+  const spriteUrl = getSpriteUrl(emoji) || 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f3ae.png';
 
   // ✅ Al montar: verificar localStorage primero
   useEffect(() => {
