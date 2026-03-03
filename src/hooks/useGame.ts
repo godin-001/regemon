@@ -2,53 +2,53 @@ import { useState, useEffect, useCallback } from 'react';
 import type { GameState, Monster, LifeStage } from '../types';
 
 // Decay rates per tick (tick = 5s)
-// Pikumon ⚡: energía se agota rápido, hambre ~12 min
-// Totomon 🌳: todo lento y tranquilo, ~18 min
-// Nyanbot 🤖: felicidad cae rápido si lo ignoras, hambre ~20 min
+// Unicornio 🦄: mágico, necesita felicidad, hambre moderada ~16 min
+// Dragón 🐉: come MUCHO, energía alta, hambre ~10 min
+// Alebrije 🎨: equilibrado pero muy sociable, felicidad cae rápido ~14 min
 const ELEMENT_PROFILES = {
-  pikumon: {
-    // Ratoncito eléctrico: energía se drena rápido, pero come bastante
-    hungerDecay: 0.55,
-    happinessDecay: 0.18,
-    energyDecay: 0.9,
-    initialHunger: 80,
-    initialHappiness: 85,
-    initialEnergy: 95,
-    feedBonus: 28,
-    playBonus: 30,
-    sleepBonus: 42,
-  },
-  totomon: {
-    // Espíritu del bosque: muy tranquilo, le encanta dormir
-    hungerDecay: 0.4,
-    happinessDecay: 0.15,
-    energyDecay: 0.3,
-    initialHunger: 85,
-    initialHappiness: 80,
-    initialEnergy: 70,
-    feedBonus: 22,
-    playBonus: 18,
-    sleepBonus: 65,
-  },
-  nyanbot: {
-    // Gato robot: necesita atención y juego, pierde felicidad si lo ignoras
-    hungerDecay: 0.3,
-    happinessDecay: 0.65,
-    energyDecay: 0.35,
-    initialHunger: 75,
+  unicornio: {
+    // Ser mágico: mana/felicidad se drena si no la cuidas
+    hungerDecay: 0.38,
+    happinessDecay: 0.72,
+    energyDecay: 0.28,
+    initialHunger: 82,
     initialHappiness: 90,
-    initialEnergy: 80,
+    initialEnergy: 78,
     feedBonus: 20,
-    playBonus: 40,
-    sleepBonus: 45,
+    playBonus: 38,
+    sleepBonus: 40,
+  },
+  dragon: {
+    // Dragón voraz: come MUCHO pero es muy fuerte
+    hungerDecay: 0.95,
+    happinessDecay: 0.20,
+    energyDecay: 0.55,
+    initialHunger: 75,
+    initialHappiness: 70,
+    initialEnergy: 92,
+    feedBonus: 38,
+    playBonus: 22,
+    sleepBonus: 48,
+  },
+  alebrije: {
+    // Ser colorido y sociable: necesita mucho juego y atención
+    hungerDecay: 0.45,
+    happinessDecay: 0.60,
+    energyDecay: 0.40,
+    initialHunger: 80,
+    initialHappiness: 88,
+    initialEnergy: 82,
+    feedBonus: 24,
+    playBonus: 42,
+    sleepBonus: 38,
   },
 } as const;
 
 type ElementProfile = typeof ELEMENT_PROFILES[keyof typeof ELEMENT_PROFILES];
 
 function getProfile(monster: Monster | null): ElementProfile {
-  if (!monster) return ELEMENT_PROFILES.pikumon;
-  return ELEMENT_PROFILES[monster.id as keyof typeof ELEMENT_PROFILES] ?? ELEMENT_PROFILES.pikumon;
+  if (!monster) return ELEMENT_PROFILES.unicornio;
+  return ELEMENT_PROFILES[monster.id as keyof typeof ELEMENT_PROFILES] ?? ELEMENT_PROFILES.unicornio;
 }
 
 const INITIAL_STATE: GameState = {

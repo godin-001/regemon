@@ -1,6 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// REGEMON — Anime × Japanese Yokai SVG Sprites
-// 96×96 viewBox  |  Motivos: Kitsune · Kodama · Nekomata
+// REGEMON — Anime SVG Sprites  |  Unicornio · Dragón · Alebrije
 // ═══════════════════════════════════════════════════════════
 import React from 'react';
 
@@ -12,473 +11,534 @@ interface Props {
   style?: React.CSSProperties;
 }
 
-const Shadow = ({ cx = 48, cy = 90, rx = 24 }: { cx?: number; cy?: number; rx?: number }) => (
-  <ellipse cx={cx} cy={cy} rx={rx} ry="5" fill="rgba(0,0,0,0.22)" />
+const Sh = ({ cx = 48, cy = 90, rx = 24 }: { cx?: number; cy?: number; rx?: number }) => (
+  <ellipse cx={cx} cy={cy} rx={rx} ry={5} fill="rgba(0,0,0,0.25)" />
 );
 
 // ════════════════════════════════════════════════════════════
-// PIKUMON — Kitsune (Electric Fox Spirit) ⚡🦊
-// Golden fox with lightning marks and magical tails
+// UNICORNIO 🦄 — Magical Rainbow Unicorn
 // ════════════════════════════════════════════════════════════
-function PikumonEgg() {
+function UnicornioEgg() {
   return (
     <>
-      <Shadow cy={88} rx={26} />
-      {/* egg */}
-      <ellipse cx="48" cy="46" rx="28" ry="36" fill="#FFD000" />
-      <ellipse cx="38" cy="30" rx="12" ry="16" fill="#FFE866" opacity="0.4" />
-      {/* lightning kanji-style crack */}
-      <polyline points="46,14 54,28 46,38 56,54 48,62"
-        fill="none" stroke="#00CCFF" strokeWidth="3.5"
-        strokeLinecap="round" strokeLinejoin="round" />
-      {/* glow dots */}
-      <circle cx="54" cy="28" r="3" fill="#00FFFF" opacity="0.8" />
-      <circle cx="56" cy="54" r="3" fill="#00FFFF" opacity="0.8" />
+      <Sh cy={88} rx={26} />
+      {/* pearl egg */}
+      <ellipse cx="48" cy="46" rx="28" ry="36" fill="#FFF0F8" />
+      <ellipse cx="38" cy="28" rx="13" ry="18" fill="white" opacity="0.5" />
+      {/* rainbow swirl */}
+      <path d="M 42,18 Q 60,26 58,40 Q 56,52 44,54 Q 34,56 34,44 Q 34,32 46,32"
+        fill="none" stroke="#FF88CC" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+      <path d="M 44,22 Q 58,30 56,42 Q 54,50 46,52"
+        fill="none" stroke="#88CCFF" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
+      <path d="M 46,26 Q 56,34 54,44"
+        fill="none" stroke="#FFEE44" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+      {/* sparkles */}
+      <circle cx="62" cy="28" r="3" fill="#FFDD44" opacity="0.9" />
+      <circle cx="66" cy="36" r="2" fill="#FF88CC" opacity="0.8" />
+      <circle cx="34" cy="60" r="2.5" fill="#88CCFF" opacity="0.8" />
     </>
   );
 }
 
-function PikumonBaby() {
+function UnicornioBaby() {
   return (
     <>
-      <Shadow cy={90} rx={20} />
-      {/* fluffy tail (single, curled) */}
-      <path d="M 62,72 Q 80,64 82,50 Q 84,38 74,32 Q 70,28 66,34"
-        fill="none" stroke="#FFB800" strokeWidth="8" strokeLinecap="round" />
-      <path d="M 62,72 Q 80,64 82,50 Q 84,38 74,32 Q 70,28 66,34"
-        fill="none" stroke="#FFE566" strokeWidth="4" strokeLinecap="round" />
-      {/* lightning tip on tail */}
-      <polyline points="66,34 70,26 64,28 68,18"
-        fill="none" stroke="#00CCFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <Sh cy={90} rx={20} />
+      {/* horn — golden spiral */}
+      <polygon points="46,4 44,22 52,22" fill="#FFD700" />
+      <polygon points="47,8 46,18 50,18" fill="#FFF099" opacity="0.7" />
+      <line x1="48" y1="4" x2="48" y2="22" stroke="#CC9900" strokeWidth="1" opacity="0.5" />
 
-      {/* kitsune ears (pointy fox ears) */}
-      <polygon points="24,44 30,12 46,40" fill="#FFD000" />
-      <polygon points="27,42 31,18 42,40" fill="#FF9900" opacity="0.7" />
-      <polygon points="50,40 66,12 72,44" fill="#FFD000" />
-      <polygon points="54,40 65,18 69,42" fill="#FF9900" opacity="0.7" />
+      {/* flowing mane — left */}
+      <path d="M 22,36 Q 16,46 18,58" fill="none" stroke="#FF44CC" strokeWidth="6" strokeLinecap="round" />
+      <path d="M 22,38 Q 15,50 17,62" fill="none" stroke="#FFAA00" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 24,40 Q 16,52 18,64" fill="none" stroke="#88CCFF" strokeWidth="3" strokeLinecap="round" />
+
+      {/* body — white round */}
+      <ellipse cx="48" cy="56" rx="30" ry="28" fill="#FFF8FF" />
+      <ellipse cx="48" cy="56" rx="30" ry="28" fill="none" stroke="#FFCCEE" strokeWidth="1.5" />
+
+      {/* mane — top right flowing */}
+      <path d="M 62,32 Q 72,40 70,54" fill="none" stroke="#AA44FF" strokeWidth="6" strokeLinecap="round" />
+      <path d="M 64,34 Q 76,42 74,58" fill="none" stroke="#FF44CC" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 66,38 Q 78,48 74,62" fill="none" stroke="#44DDFF" strokeWidth="3" strokeLinecap="round" />
+
+      {/* big sparkly eyes */}
+      <circle cx="36" cy="50" r="11" fill="#1A0A1A" />
+      <circle cx="36" cy="50" r="8" fill="#CC44AA" />
+      <circle cx="36" cy="50" r="5" fill="#FF88DD" />
+      <circle cx="39" cy="47" r="3.5" fill="white" opacity="0.95" />
+      <circle cx="34" cy="54" r="1.5" fill="white" opacity="0.6" />
+      <circle cx="60" cy="50" r="11" fill="#1A0A1A" />
+      <circle cx="60" cy="50" r="8" fill="#CC44AA" />
+      <circle cx="60" cy="50" r="5" fill="#FF88DD" />
+      <circle cx="63" cy="47" r="3.5" fill="white" opacity="0.95" />
+      <circle cx="58" cy="54" r="1.5" fill="white" opacity="0.6" />
+
+      {/* small nose */}
+      <ellipse cx="48" cy="62" rx="4" ry="3" fill="#FFCCEE" />
+      <circle cx="46" cy="62" r="1.5" fill="#CC6699" />
+      <circle cx="50" cy="62" r="1.5" fill="#CC6699" />
+
+      {/* sparkle stars around */}
+      <text x="14" y="46" fontSize="10" fill="#FFDD44" opacity="0.9">✦</text>
+      <text x="76" y="44" fontSize="8" fill="#FF88CC" opacity="0.8">✦</text>
+      <text x="18" y="70" fontSize="7" fill="#88CCFF" opacity="0.7">✦</text>
+
+      {/* hooves */}
+      <ellipse cx="36" cy="82" rx="11" ry="7" fill="#E8D8E8" />
+      <ellipse cx="60" cy="82" rx="11" ry="7" fill="#E8D8E8" />
+    </>
+  );
+}
+
+function UnicornioAdult() {
+  return (
+    <>
+      <Sh cy={91} rx={28} />
+      {/* tall spiraling horn */}
+      <polygon points="44,2 40,24 56,24" fill="#FFD700" />
+      <polygon points="46,4 43,20 53,20" fill="#FFF099" opacity="0.7" />
+      {/* spiral lines on horn */}
+      <line x1="44" y1="22" x2="48" y2="4" stroke="#CC9900" strokeWidth="1.5" opacity="0.5" strokeDasharray="2 3" />
+
+      {/* long flowing mane — left */}
+      <path d="M 18,32 Q 8,50 10,70 Q 12,84 18,90"
+        fill="none" stroke="#FF44CC" strokeWidth="9" strokeLinecap="round" />
+      <path d="M 18,34 Q 6,54 8,74 Q 10,86 16,92"
+        fill="none" stroke="#FFAA00" strokeWidth="6" strokeLinecap="round" />
+      <path d="M 20,38 Q 8,58 10,78"
+        fill="none" stroke="#88CCFF" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 22,44 Q 10,62 12,82"
+        fill="none" stroke="#AA44FF" strokeWidth="3" strokeLinecap="round" />
 
       {/* head */}
-      <ellipse cx="48" cy="52" rx="28" ry="26" fill="#FFE033" />
-      {/* fox snout (elongated slightly) */}
-      <ellipse cx="48" cy="62" rx="10" ry="7" fill="#FFB800" />
-      <ellipse cx="48" cy="60" rx="4" ry="3" fill="#CC6600" />
-      {/* whisker lines */}
-      <line x1="18" y1="56" x2="37" y2="60" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
-      <line x1="18" y1="61" x2="37" y2="62" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
-      <line x1="59" y1="60" x2="78" y2="56" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
-      <line x1="59" y1="62" x2="78" y2="61" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
+      <ellipse cx="48" cy="52" rx="32" ry="30" fill="#FFF8FF" />
+      <ellipse cx="48" cy="52" rx="32" ry="30" fill="none" stroke="#FFCCEE" strokeWidth="2" />
 
-      {/* kitsune eyes — slanted, magical amber */}
-      <ellipse cx="35" cy="48" rx="8" ry="6" fill="#1A0A00" />
-      <ellipse cx="35" cy="48" rx="5" ry="4" fill="#CC6600" />
-      <circle cx="37" cy="46" r="2.5" fill="white" opacity="0.9" />
-      <ellipse cx="61" cy="48" rx="8" ry="6" fill="#1A0A00" />
-      <ellipse cx="61" cy="48" rx="5" ry="4" fill="#CC6600" />
-      <circle cx="63" cy="46" r="2.5" fill="white" opacity="0.9" />
+      {/* long flowing mane — right */}
+      <path d="M 74,30 Q 86,48 84,68 Q 82,82 76,90"
+        fill="none" stroke="#CC44FF" strokeWidth="9" strokeLinecap="round" />
+      <path d="M 76,32 Q 90,50 88,72"
+        fill="none" stroke="#FF88CC" strokeWidth="6" strokeLinecap="round" />
+      <path d="M 76,38 Q 90,56 88,76"
+        fill="none" stroke="#44DDFF" strokeWidth="4" strokeLinecap="round" />
 
-      {/* ⚡ electric cheek marks */}
-      <polyline points="16,50 20,55 16,60" fill="none" stroke="#00CCFF" strokeWidth="2.5" strokeLinecap="round" />
-      <polyline points="80,50 76,55 80,60" fill="none" stroke="#00CCFF" strokeWidth="2.5" strokeLinecap="round" />
+      {/* large expressive eyes with lashes */}
+      <circle cx="32" cy="46" r="13" fill="#1A0A1A" />
+      <circle cx="32" cy="46" r="10" fill="#CC44AA" />
+      <circle cx="32" cy="46" r="6" fill="#FF88DD" />
+      <circle cx="36" cy="41" r="4" fill="white" opacity="0.95" />
+      <circle cx="30" cy="52" r="2" fill="white" opacity="0.6" />
+      {/* lashes */}
+      <line x1="22" y1="38" x2="27" y2="41" stroke="#1A0A1A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="25" y1="36" x2="29" y2="39" stroke="#1A0A1A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="29" y1="34" x2="31" y2="38" stroke="#1A0A1A" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="64" cy="46" r="13" fill="#1A0A1A" />
+      <circle cx="64" cy="46" r="10" fill="#CC44AA" />
+      <circle cx="64" cy="46" r="6" fill="#FF88DD" />
+      <circle cx="68" cy="41" r="4" fill="white" opacity="0.95" />
+      <circle cx="62" cy="52" r="2" fill="white" opacity="0.6" />
+      <line x1="74" y1="38" x2="69" y2="41" stroke="#1A0A1A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="71" y1="36" x2="67" y2="39" stroke="#1A0A1A" strokeWidth="2" strokeLinecap="round" />
+      <line x1="67" y1="34" x2="65" y2="38" stroke="#1A0A1A" strokeWidth="2" strokeLinecap="round" />
+
+      {/* nose */}
+      <ellipse cx="48" cy="62" rx="6" ry="4" fill="#FFCCEE" />
+      <circle cx="45" cy="62" r="2" fill="#CC6699" />
+      <circle cx="51" cy="62" r="2" fill="#CC6699" />
+      {/* smile */}
+      <path d="M 41,68 Q 48,74 55,68" fill="none" stroke="#CC88AA" strokeWidth="2.5" strokeLinecap="round" />
 
       {/* body */}
-      <ellipse cx="46" cy="76" rx="20" ry="14" fill="#FFD000" />
-      {/* paws */}
-      <ellipse cx="33" cy="86" rx="11" ry="7" fill="#CCA000" />
-      <ellipse cx="59" cy="86" rx="11" ry="7" fill="#CCA000" />
+      <ellipse cx="46" cy="78" rx="26" ry="16" fill="#FFF4FF" />
+      {/* legs / hooves */}
+      <ellipse cx="30" cy="88" rx="13" ry="8" fill="#EEE0EE" />
+      <ellipse cx="58" cy="88" rx="13" ry="8" fill="#EEE0EE" />
+      {/* glitter sparkles */}
+      <text x="6" y="54" fontSize="12" fill="#FFDD44" opacity="0.9">✦</text>
+      <text x="82" y="42" fontSize="10" fill="#FF88CC" opacity="0.85">✦</text>
+      <text x="4" y="74" fontSize="8" fill="#88CCFF" opacity="0.8">✦</text>
+      <text x="84" y="76" fontSize="9" fill="#AA44FF" opacity="0.8">✦</text>
     </>
   );
 }
 
-function PikumonAdult() {
+// ════════════════════════════════════════════════════════════
+// DRAGÓN 🐉 — Fire Dragon (anime/fantasy style)
+// ════════════════════════════════════════════════════════════
+function DragonEgg() {
   return (
     <>
-      <Shadow cy={90} rx={28} />
-      {/* THREE magical tails with lightning tips */}
-      <path d="M 64,72 Q 88,58 88,40 Q 88,24 76,20"
-        fill="none" stroke="#FFB800" strokeWidth="8" strokeLinecap="round" />
-      <path d="M 64,72 Q 88,58 88,40 Q 88,24 76,20"
-        fill="none" stroke="#FFE566" strokeWidth="4" strokeLinecap="round" />
-      <path d="M 60,74 Q 90,70 94,54 Q 96,40 84,32"
-        fill="none" stroke="#FFB800" strokeWidth="7" strokeLinecap="round" />
-      <path d="M 60,74 Q 90,70 94,54 Q 96,40 84,32"
-        fill="none" stroke="#FFE566" strokeWidth="3" strokeLinecap="round" />
-      <path d="M 62,76 Q 86,82 90,68 Q 94,56 82,48"
-        fill="none" stroke="#FFB800" strokeWidth="7" strokeLinecap="round" />
-      <path d="M 62,76 Q 86,82 90,68 Q 94,56 82,48"
-        fill="none" stroke="#FFE566" strokeWidth="3" strokeLinecap="round" />
+      <Sh cy={88} rx={26} />
+      {/* scaly red egg */}
+      <ellipse cx="48" cy="46" rx="28" ry="36" fill="#CC2200" />
+      <ellipse cx="38" cy="28" rx="12" ry="16" fill="#FF4411" opacity="0.5" />
+      {/* scale pattern */}
+      <path d="M 28,40 Q 36,36 44,40 Q 52,36 60,40 Q 68,36 70,44"
+        fill="none" stroke="#991100" strokeWidth="2" />
+      <path d="M 28,48 Q 36,44 44,48 Q 52,44 60,48 Q 68,44 70,52"
+        fill="none" stroke="#991100" strokeWidth="2" />
+      <path d="M 30,56 Q 38,52 46,56 Q 54,52 62,56"
+        fill="none" stroke="#991100" strokeWidth="2" />
+      {/* crack glow */}
+      <path d="M 44,20 L 48,34 L 44,42 L 50,54 L 46,62"
+        fill="none" stroke="#FF8800" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="48" cy="34" r="4" fill="#FFCC00" opacity="0.9" />
+    </>
+  );
+}
 
-      {/* lightning tips */}
-      <polyline points="76,20 80,12 73,14 78,6" fill="none" stroke="#00CCFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      <polyline points="84,32 90,24 83,26 88,16" fill="none" stroke="#00CCFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+function DragonBaby() {
+  return (
+    <>
+      <Sh cy={90} rx={20} />
+      {/* small wings */}
+      <path d="M 20,44 Q 6,30 10,50 Q 14,62 22,60"
+        fill="#990011" stroke="#660000" strokeWidth="1.5" />
+      <path d="M 76,44 Q 90,30 86,50 Q 82,62 74,60"
+        fill="#990011" stroke="#660000" strokeWidth="1.5" />
+      {/* wing veins */}
+      <line x1="20" y1="44" x2="10" y2="38" stroke="#CC0011" strokeWidth="1.5" />
+      <line x1="20" y1="46" x2="8" y2="48" stroke="#CC0011" strokeWidth="1.5" />
+      <line x1="76" y1="44" x2="86" y2="38" stroke="#CC0011" strokeWidth="1.5" />
+      <line x1="76" y1="46" x2="88" y2="48" stroke="#CC0011" strokeWidth="1.5" />
 
-      {/* kitsune ears — tall and majestic */}
-      <polygon points="14,44 22,6 42,38" fill="#FFD000" />
-      <polygon points="18,42 23,14 38,38" fill="#FF9900" opacity="0.65" />
-      <polygon points="54,38 74,6 82,44" fill="#FFD000" />
-      <polygon points="58,38 73,14 78,42" fill="#FF9900" opacity="0.65" />
+      {/* small horns */}
+      <polygon points="36,26 32,10 40,24" fill="#FFEEAA" />
+      <polygon points="60,26 64,10 56,24" fill="#FFEEAA" />
+
+      {/* round body */}
+      <ellipse cx="48" cy="56" rx="30" ry="28" fill="#DD2200" />
+      {/* scale pattern on body */}
+      <path d="M 26,50 Q 34,46 42,50 Q 50,46 58,50 Q 66,46 70,52"
+        fill="none" stroke="#BB1100" strokeWidth="1.5" opacity="0.7" />
+      <path d="M 28,60 Q 36,56 44,60 Q 52,56 60,60 Q 66,56 70,62"
+        fill="none" stroke="#BB1100" strokeWidth="1.5" opacity="0.7" />
+
+      {/* eyes — slitted pupils, glowing yellow */}
+      <circle cx="36" cy="50" r="10" fill="#1A0000" />
+      <circle cx="36" cy="50" r="7" fill="#FFCC00" />
+      <ellipse cx="36" cy="50" rx="3" ry="6" fill="#1A0000" />
+      <circle cx="39" cy="47" r="2.5" fill="white" opacity="0.7" />
+      <circle cx="60" cy="50" r="10" fill="#1A0000" />
+      <circle cx="60" cy="50" r="7" fill="#FFCC00" />
+      <ellipse cx="60" cy="50" rx="3" ry="6" fill="#1A0000" />
+      <circle cx="63" cy="47" r="2.5" fill="white" opacity="0.7" />
+
+      {/* small flame breath */}
+      <path d="M 48,68 Q 44,76 46,82 Q 50,86 54,82 Q 58,76 52,68"
+        fill="#FF8800" opacity="0.9" />
+      <path d="M 48,68 Q 45,74 47,79 Q 50,82 53,79 Q 55,74 52,68"
+        fill="#FFCC00" opacity="0.85" />
+
+      {/* tail hint */}
+      <path d="M 68,72 Q 80,78 82,70" fill="none" stroke="#BB1100" strokeWidth="8" strokeLinecap="round" />
+      <path d="M 68,72 Q 80,78 82,70" fill="none" stroke="#FF4411" strokeWidth="4" strokeLinecap="round" />
+    </>
+  );
+}
+
+function DragonAdult() {
+  return (
+    <>
+      <Sh cy={92} rx={30} />
+      {/* large spread wings */}
+      <path d="M 18,44 Q -4,20 2,52 Q 6,70 20,70 Q 26,68 24,58"
+        fill="#880011" stroke="#550000" strokeWidth="2" />
+      <path d="M 78,44 Q 100,20 94,52 Q 90,70 76,70 Q 70,68 72,58"
+        fill="#880011" stroke="#550000" strokeWidth="2" />
+      {/* wing ribs */}
+      <line x1="18" y1="44" x2="0" y2="30" stroke="#AA0011" strokeWidth="2.5" />
+      <line x1="18" y1="46" x2="-2" y2="50" stroke="#AA0011" strokeWidth="2" />
+      <line x1="20" y1="50" x2="4" y2="62" stroke="#AA0011" strokeWidth="2" />
+      <line x1="78" y1="44" x2="96" y2="30" stroke="#AA0011" strokeWidth="2.5" />
+      <line x1="78" y1="46" x2="98" y2="50" stroke="#AA0011" strokeWidth="2" />
+      <line x1="76" y1="50" x2="92" y2="62" stroke="#AA0011" strokeWidth="2" />
+
+      {/* tall horns */}
+      <polygon points="32,24 26,4 40,22" fill="#FFEEAA" />
+      <polygon points="34,22 29,6 38,20" fill="#FFFACC" opacity="0.6" />
+      <polygon points="64,24 74,4 60,22" fill="#FFEEAA" />
+      <polygon points="66,22 71,6 62,20" fill="#FFFACC" opacity="0.6" />
 
       {/* head */}
-      <ellipse cx="48" cy="50" rx="32" ry="30" fill="#FFE033" />
+      <ellipse cx="48" cy="48" rx="34" ry="30" fill="#EE2200" />
+      {/* scale row on head */}
+      <path d="M 18,44 Q 30,38 48,40 Q 66,38 78,44"
+        fill="none" stroke="#CC1100" strokeWidth="2" opacity="0.8" />
 
-      {/* fox face markings — diamond pattern on forehead */}
-      <polygon points="48,22 54,30 48,38 42,30" fill="#FF9900" opacity="0.5" />
+      {/* glowing dragon eyes */}
+      <circle cx="31" cy="44" r="12" fill="#1A0000" />
+      <circle cx="31" cy="44" r="9" fill="#FFAA00" />
+      <circle cx="31" cy="44" r="5" fill="#FF6600" />
+      <ellipse cx="31" cy="44" rx="2.5" ry="7" fill="#1A0000" />
+      <circle cx="35" cy="40" r="3" fill="white" opacity="0.7" />
+      <circle cx="65" cy="44" r="12" fill="#1A0000" />
+      <circle cx="65" cy="44" r="9" fill="#FFAA00" />
+      <circle cx="65" cy="44" r="5" fill="#FF6600" />
+      <ellipse cx="65" cy="44" rx="2.5" ry="7" fill="#1A0000" />
+      <circle cx="69" cy="40" r="3" fill="white" opacity="0.7" />
 
-      {/* fox snout */}
-      <ellipse cx="48" cy="62" rx="12" ry="8" fill="#FFB800" />
-      <ellipse cx="48" cy="60" rx="5" ry="3.5" fill="#CC6600" />
-      {/* whiskers — longer */}
-      <line x1="10" y1="56" x2="35" y2="61" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
-      <line x1="10" y1="62" x2="35" y2="63" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
-      <line x1="61" y1="61" x2="86" y2="56" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
-      <line x1="61" y1="63" x2="86" y2="62" stroke="#CC8800" strokeWidth="1.5" opacity="0.7" />
+      {/* dragon nose */}
+      <ellipse cx="48" cy="60" rx="8" ry="5" fill="#CC1100" />
+      <circle cx="44" cy="60" r="3" fill="#991100" />
+      <circle cx="52" cy="60" r="3" fill="#991100" />
 
-      {/* eyes — larger, more powerful */}
-      <ellipse cx="32" cy="46" rx="10" ry="8" fill="#1A0A00" />
-      <ellipse cx="32" cy="46" rx="7" ry="5" fill="#DD7700" />
-      <circle cx="35" cy="43" r="3" fill="white" opacity="0.9" />
-      <ellipse cx="64" cy="46" rx="10" ry="8" fill="#1A0A00" />
-      <ellipse cx="64" cy="46" rx="7" ry="5" fill="#DD7700" />
-      <circle cx="67" cy="43" r="3" fill="white" opacity="0.9" />
-
-      {/* electric marks on cheeks — bigger */}
-      <polyline points="10,48 16,54 10,60" fill="none" stroke="#00CCFF" strokeWidth="3.5" strokeLinecap="round" />
-      <polyline points="86,48 80,54 86,60" fill="none" stroke="#00CCFF" strokeWidth="3.5" strokeLinecap="round" />
+      {/* large fire breath */}
+      <path d="M 44,70 Q 36,84 40,92 Q 48,98 56,92 Q 60,84 52,70"
+        fill="#FF6600" opacity="0.95" />
+      <path d="M 44,70 Q 38,82 42,89 Q 48,94 54,89 Q 58,82 52,70"
+        fill="#FF9900" />
+      <path d="M 46,70 Q 42,80 44,86 Q 48,90 52,86 Q 54,80 50,70"
+        fill="#FFDD00" opacity="0.9" />
+      {/* fire glow */}
+      <ellipse cx="48" cy="90" rx="14" ry="6" fill="#FF6600" opacity="0.35" />
 
       {/* body */}
-      <ellipse cx="44" cy="76" rx="26" ry="16" fill="#FFD000" />
-      {/* front legs / paws */}
-      <ellipse cx="28" cy="87" rx="14" ry="8" fill="#CCA000" />
-      <ellipse cx="58" cy="87" rx="14" ry="8" fill="#CCA000" />
-      {/* toe bumps */}
-      <circle cx="20" cy="90" r="4" fill="#BB9000" />
-      <circle cx="28" cy="92" r="4" fill="#BB9000" />
-      <circle cx="36" cy="90" r="4" fill="#BB9000" />
-      <circle cx="50" cy="90" r="4" fill="#BB9000" />
-      <circle cx="58" cy="92" r="4" fill="#BB9000" />
-      <circle cx="66" cy="90" r="4" fill="#BB9000" />
+      <ellipse cx="46" cy="74" rx="24" ry="14" fill="#EE2200" />
+      {/* scale rows on body */}
+      <path d="M 26,70 Q 36,66 46,68 Q 56,66 66,70" fill="none" stroke="#CC1100" strokeWidth="2" opacity="0.8" />
+      {/* claws */}
+      <ellipse cx="28" cy="84" rx="12" ry="7" fill="#CC1100" />
+      <ellipse cx="58" cy="84" rx="12" ry="7" fill="#CC1100" />
+      <polygon points="20,86 18,94 26,90" fill="#FFEEAA" />
+      <polygon points="26,88 25,96 32,92" fill="#FFEEAA" />
+      <polygon points="32,88 32,96 38,92" fill="#FFEEAA" />
+      <polygon points="50,88 50,96 56,92" fill="#FFEEAA" />
+      <polygon points="56,88 57,96 62,92" fill="#FFEEAA" />
+      <polygon points="62,86 64,94 68,90" fill="#FFEEAA" />
     </>
   );
 }
 
 // ════════════════════════════════════════════════════════════
-// TOTOMON — Kodama (Ancient Forest Spirit) 🌿👻
-// White ghost-like nature spirit with leaf crown
+// ALEBRIJE 🎨 — Mexican Folk Art Fantasy Creature
+// Cuerpo de jaguar + alas de quetzal + detalles oaxaqueños
 // ════════════════════════════════════════════════════════════
-function TotomonEgg() {
+function AlebrjeEgg() {
   return (
     <>
-      <Shadow cy={88} rx={25} />
-      {/* egg — mossy green */}
-      <ellipse cx="48" cy="46" rx="28" ry="36" fill="#4A9E5C" />
-      <ellipse cx="38" cy="30" rx="12" ry="16" fill="#72CC7A" opacity="0.45" />
-      {/* vine spiral */}
-      <path d="M 48,16 Q 60,24 58,36 Q 56,46 48,48 Q 40,50 40,38 Q 40,28 48,28"
-        fill="none" stroke="#2A6A2A" strokeWidth="2.5" strokeLinecap="round" />
-      {/* leaf bud on top */}
-      <ellipse cx="48" cy="14" rx="7" ry="10" fill="#3A8A3A" transform="rotate(-10 48 14)" />
-      <line x1="48" y1="18" x2="47" y2="28" stroke="#2A6A2A" strokeWidth="1.5" strokeLinecap="round" />
+      <Sh cy={88} rx={26} />
+      {/* colorful patterned egg */}
+      <ellipse cx="48" cy="46" rx="28" ry="36" fill="#DD22AA" />
+      <ellipse cx="38" cy="28" rx="12" ry="16" fill="#FF44CC" opacity="0.4" />
+      {/* alebrije geometric patterns */}
+      {/* diamond patterns */}
+      <polygon points="48,20 56,32 48,44 40,32" fill="#FFEE00" opacity="0.85" />
+      <polygon points="48,24 54,32 48,40 42,32" fill="#FF8800" opacity="0.7" />
+      {/* dots */}
+      <circle cx="34" cy="40" r="4" fill="#00DDAA" opacity="0.9" />
+      <circle cx="62" cy="40" r="4" fill="#00DDAA" opacity="0.9" />
+      <circle cx="34" cy="52" r="3" fill="#FFEE00" opacity="0.8" />
+      <circle cx="62" cy="52" r="3" fill="#FFEE00" opacity="0.8" />
+      <circle cx="48" cy="60" r="4" fill="#44CCFF" opacity="0.9" />
+      {/* zigzag lines */}
+      <path d="M 28,48 L 34,44 L 40,48 L 46,44 L 52,48 L 58,44 L 64,48 L 70,44"
+        fill="none" stroke="#44FFAA" strokeWidth="2" opacity="0.8" />
     </>
   );
 }
 
-function TotomonBaby() {
+function AlebrjeBaby() {
   return (
     <>
-      <Shadow cy={88} rx={22} />
-      {/* leaf hat */}
-      <ellipse cx="48" cy="16" rx="22" ry="10" fill="#3A8A3A" transform="rotate(-5 48 16)" />
-      <ellipse cx="48" cy="16" rx="18" ry="7" fill="#5AAA5A" transform="rotate(-5 48 16)" />
-      <line x1="38" y1="20" x2="48" y2="16" stroke="#2A6A2A" strokeWidth="1.5" />
-      <line x1="58" y1="20" x2="48" y2="16" stroke="#2A6A2A" strokeWidth="1.5" />
-      {/* hat stem */}
-      <line x1="48" y1="22" x2="48" y2="30" stroke="#4A7A4A" strokeWidth="2" strokeLinecap="round" />
+      <Sh cy={90} rx={20} />
+      {/* small quetzal-style wings */}
+      <path d="M 16,48 Q 4,34 8,52 Q 12,62 20,60"
+        fill="#00BBAA" stroke="#008888" strokeWidth="1.5" />
+      <path d="M 80,48 Q 92,34 88,52 Q 84,62 76,60"
+        fill="#00BBAA" stroke="#008888" strokeWidth="1.5" />
+      {/* wing feather tips */}
+      <path d="M 16,48 Q 2,38 4,28" fill="none" stroke="#FFEE00" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 16,50 Q 0,44 2,36" fill="none" stroke="#FF8800" strokeWidth="3" strokeLinecap="round" />
+      <path d="M 80,48 Q 94,38 92,28" fill="none" stroke="#FFEE00" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 80,50 Q 96,44 94,36" fill="none" stroke="#FF8800" strokeWidth="3" strokeLinecap="round" />
 
-      {/* round ghost body — kodama white */}
-      <ellipse cx="48" cy="60" rx="32" ry="34" fill="#F0F4E8" />
-      {/* soft grey outline */}
-      <ellipse cx="48" cy="60" rx="32" ry="34" fill="none" stroke="#C8D8C0" strokeWidth="2" />
+      {/* small deer horns */}
+      <line x1="38" y1="26" x2="32" y2="10" stroke="#FF6644" strokeWidth="4" strokeLinecap="round" />
+      <line x1="32" y1="10" x2="26" y2="6" stroke="#FF6644" strokeWidth="3" strokeLinecap="round" />
+      <line x1="32" y1="10" x2="28" y2="4" stroke="#FF6644" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="58" y1="26" x2="64" y2="10" stroke="#FF6644" strokeWidth="4" strokeLinecap="round" />
+      <line x1="64" y1="10" x2="70" y2="6" stroke="#FF6644" strokeWidth="3" strokeLinecap="round" />
+      <line x1="64" y1="10" x2="68" y2="4" stroke="#FF6644" strokeWidth="2.5" strokeLinecap="round" />
 
-      {/* nature belly pattern */}
-      <ellipse cx="48" cy="66" rx="18" ry="16" fill="#D8ECCC" />
-      <path d="M 36,62 Q 48,70 60,62" fill="none" stroke="#A8C8A0" strokeWidth="2" />
-      <path d="M 38,70 Q 48,76 58,70" fill="none" stroke="#A8C8A0" strokeWidth="1.5" />
+      {/* round body — hot pink */}
+      <ellipse cx="48" cy="56" rx="30" ry="28" fill="#EE22AA" />
 
-      {/* kodama eyes — classic hollow circles, very expressive */}
-      <circle cx="34" cy="52" r="10" fill="#1A2A1A" />
-      <circle cx="34" cy="52" r="6" fill="#2A4A2A" />
-      <circle cx="37" cy="49" r="4" fill="white" opacity="0.9" />
-      <circle cx="62" cy="52" r="10" fill="#1A2A1A" />
-      <circle cx="62" cy="52" r="6" fill="#2A4A2A" />
-      <circle cx="65" cy="49" r="4" fill="white" opacity="0.9" />
+      {/* alebrije diamond pattern on body */}
+      <polygon points="48,36 56,48 48,60 40,48" fill="#FFEE00" opacity="0.9" />
+      <polygon points="48,40 54,48 48,56 42,48" fill="#FF8800" opacity="0.75" />
 
-      {/* small O-mouth */}
-      <circle cx="48" cy="64" r="4" fill="#1A2A1A" />
-      <circle cx="48" cy="64" r="2.5" fill="#2A4A2A" />
+      {/* dot patterns */}
+      <circle cx="30" cy="50" r="4" fill="#00DDAA" opacity="0.9" />
+      <circle cx="66" cy="50" r="4" fill="#00DDAA" opacity="0.9" />
+      <circle cx="30" cy="62" r="3" fill="#44CCFF" opacity="0.85" />
+      <circle cx="66" cy="62" r="3" fill="#44CCFF" opacity="0.85" />
 
-      {/* tiny feet barely peeking out */}
-      <ellipse cx="36" cy="89" rx="11" ry="6" fill="#D4E8C8" />
-      <ellipse cx="60" cy="89" rx="11" ry="6" fill="#D4E8C8" />
+      {/* big eyes — green with joy */}
+      <circle cx="36" cy="50" r="10" fill="#0A1A0A" />
+      <circle cx="36" cy="50" r="7" fill="#00CC44" />
+      <circle cx="36" cy="50" r="4" fill="#00FF66" />
+      <circle cx="39" cy="47" r="3" fill="white" opacity="0.9" />
+      <circle cx="60" cy="50" r="10" fill="#0A1A0A" />
+      <circle cx="60" cy="50" r="7" fill="#00CC44" />
+      <circle cx="60" cy="50" r="4" fill="#00FF66" />
+      <circle cx="63" cy="47" r="3" fill="white" opacity="0.9" />
+
+      {/* cat/jaguar nose and muzzle */}
+      <ellipse cx="48" cy="60" rx="8" ry="6" fill="#CC1188" />
+      <polygon points="48,60 45,66 51,66" fill="#AA0077" />
+
+      {/* zigzag pattern at bottom */}
+      <path d="M 24,70 L 30,66 L 36,70 L 42,66 L 48,70 L 54,66 L 60,70 L 66,66 L 72,70"
+        fill="none" stroke="#44CCFF" strokeWidth="2" opacity="0.8" />
+
+      {/* small tail */}
+      <path d="M 68,70 Q 80,74 84,66 Q 86,60 78,58"
+        fill="none" stroke="#FF8800" strokeWidth="6" strokeLinecap="round" />
+      <path d="M 68,70 Q 80,74 84,66 Q 86,60 78,58"
+        fill="none" stroke="#FFEE00" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* feet/paws */}
+      <ellipse cx="34" cy="82" rx="11" ry="7" fill="#CC1188" />
+      <ellipse cx="62" cy="82" rx="11" ry="7" fill="#CC1188" />
     </>
   );
 }
 
-function TotomonAdult() {
+function AlebrjeAdult() {
   return (
     <>
-      <Shadow cy={91} rx={32} />
-      {/* leaf crown / nature headpiece */}
-      <ellipse cx="26" cy="14" rx="14" ry="9" fill="#3A8A3A" transform="rotate(-30 26 14)" />
-      <ellipse cx="26" cy="14" rx="10" ry="6" fill="#5AAA5A" transform="rotate(-30 26 14)" />
-      <ellipse cx="48" cy="8" rx="14" ry="9" fill="#3A8A3A" />
-      <ellipse cx="48" cy="8" rx="10" ry="6" fill="#5AAA5A" />
-      <ellipse cx="70" cy="14" rx="14" ry="9" fill="#3A8A3A" transform="rotate(30 70 14)" />
-      <ellipse cx="70" cy="14" rx="10" ry="6" fill="#5AAA5A" transform="rotate(30 70 14)" />
+      <Sh cy={92} rx={30} />
+      {/* large quetzal wings spread */}
+      <path d="M 12,46 Q -8,18 -2,48 Q 2,66 18,68"
+        fill="#009988" stroke="#006666" strokeWidth="2" />
+      <path d="M 12,46 Q -6,26 0,56 Q 4,68 16,70"
+        fill="#00BBAA" opacity="0.7" />
+      <path d="M 82,46 Q 102,18 96,48 Q 92,66 78,68"
+        fill="#009988" stroke="#006666" strokeWidth="2" />
+      <path d="M 82,46 Q 100,26 94,56 Q 90,68 80,70"
+        fill="#00BBAA" opacity="0.7" />
 
-      {/* vine connections between leaves */}
-      <path d="M 26,20 Q 36,14 48,16 Q 60,14 70,20"
-        fill="none" stroke="#4A7A4A" strokeWidth="2" />
+      {/* wing feather plumes */}
+      <path d="M 12,46 Q -10,30 -8,14" fill="none" stroke="#FFEE00" strokeWidth="5" strokeLinecap="round" />
+      <path d="M 12,48 Q -12,36 -10,22" fill="none" stroke="#FF8800" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 14,52 Q -8,44 -6,30" fill="none" stroke="#FF44CC" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 82,46 Q 104,30 102,14" fill="none" stroke="#FFEE00" strokeWidth="5" strokeLinecap="round" />
+      <path d="M 82,48 Q 106,36 104,22" fill="none" stroke="#FF8800" strokeWidth="4" strokeLinecap="round" />
+      <path d="M 80,52 Q 102,44 100,30" fill="none" stroke="#FF44CC" strokeWidth="4" strokeLinecap="round" />
 
-      {/* large majestic ghost body */}
-      <ellipse cx="48" cy="58" rx="38" ry="36" fill="#ECEFE4" />
-      <ellipse cx="48" cy="58" rx="38" ry="36" fill="none" stroke="#C0CEB8" strokeWidth="2.5" />
-
-      {/* large glowing belly — nature rune */}
-      <ellipse cx="48" cy="64" rx="24" ry="22" fill="#D0E8C0" />
-      {/* nature rune/spiral */}
-      <path d="M 48,52 Q 60,56 58,66 Q 56,74 48,74 Q 40,74 38,66 Q 36,56 48,52"
-        fill="none" stroke="#5AAA5A" strokeWidth="2.5" strokeLinecap="round" />
-      <circle cx="48" cy="63" r="4" fill="#5AAA5A" opacity="0.7" />
-
-      {/* large expressive kodama eyes */}
-      <circle cx="28" cy="44" r="14" fill="#1A2A1A" />
-      <circle cx="28" cy="44" r="9" fill="#2A4A2A" />
-      <circle cx="33" cy="39" r="5" fill="white" opacity="0.9" />
-      <circle cx="68" cy="44" r="14" fill="#1A2A1A" />
-      <circle cx="68" cy="44" r="9" fill="#2A4A2A" />
-      <circle cx="73" cy="39" r="5" fill="white" opacity="0.9" />
-
-      {/* O-mouth */}
-      <circle cx="48" cy="60" r="5" fill="#1A2A1A" />
-      <circle cx="48" cy="60" r="3" fill="#2A4A2A" />
-
-      {/* floating spirit wisps */}
-      <circle cx="10" cy="44" r="5" fill="#A0CC90" opacity="0.65" />
-      <circle cx="8" cy="36" r="3" fill="#A0CC90" opacity="0.45" />
-      <circle cx="86" cy="44" r="5" fill="#A0CC90" opacity="0.65" />
-      <circle cx="88" cy="36" r="3" fill="#A0CC90" opacity="0.45" />
-
-      {/* feet */}
-      <ellipse cx="32" cy="88" rx="14" ry="7" fill="#D0E4C0" />
-      <ellipse cx="64" cy="88" rx="14" ry="7" fill="#D0E4C0" />
-      {/* toes */}
-      <ellipse cx="22" cy="91" r="5" fill="#C0D8B0" />
-      <ellipse cx="30" cy="92" r="5" fill="#C0D8B0" />
-      <ellipse cx="38" cy="91" r="5" fill="#C0D8B0" />
-      <ellipse cx="54" cy="91" r="5" fill="#C0D8B0" />
-      <ellipse cx="62" cy="92" r="5" fill="#C0D8B0" />
-      <ellipse cx="72" cy="91" r="5" fill="#C0D8B0" />
-    </>
-  );
-}
-
-// ════════════════════════════════════════════════════════════
-// NYANBOT — Nekomata (Cyber Twin-Tailed Cat Demon) 🤖😈
-// Two glowing tails + cyber-armor with circuit runes
-// ════════════════════════════════════════════════════════════
-function NyanbotEgg() {
-  return (
-    <>
-      <Shadow cy={88} rx={25} />
-      {/* egg body — metallic blue */}
-      <ellipse cx="48" cy="46" rx="28" ry="36" fill="#0E88CC" />
-      <ellipse cx="38" cy="30" rx="12" ry="16" fill="#44BBFF" opacity="0.4" />
-      {/* circuit board cross */}
-      <line x1="28" y1="44" x2="68" y2="44" stroke="#00BBCC" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="48" y1="20" x2="48" y2="68" stroke="#00BBCC" strokeWidth="2.5" strokeLinecap="round" />
-      {/* center glowing node */}
-      <circle cx="48" cy="44" r="8" fill="#00FFFF" opacity="0.85" />
-      <circle cx="48" cy="44" r="4" fill="#007788" />
-      {/* corner nodes */}
-      <circle cx="28" cy="44" r="4" fill="#0099BB" />
-      <circle cx="68" cy="44" r="4" fill="#0099BB" />
-      <circle cx="48" cy="24" r="4" fill="#0099BB" />
-      <circle cx="48" cy="64" r="4" fill="#0099BB" />
-    </>
-  );
-}
-
-function NyanbotBaby() {
-  return (
-    <>
-      <Shadow cy={89} rx={22} />
-      {/* nekomata TWO tails (glowing) */}
-      <path d="M 58,72 Q 72,60 74,46 Q 76,34 68,28"
-        fill="none" stroke="#0077AA" strokeWidth="7" strokeLinecap="round" />
-      <path d="M 58,72 Q 72,60 74,46 Q 76,34 68,28"
-        fill="none" stroke="#00DDFF" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="68" cy="28" r="5" fill="#00FFFF" opacity="0.9" />
-      <path d="M 60,74 Q 74,70 76,56 Q 78,44 70,36"
-        fill="none" stroke="#0077AA" strokeWidth="7" strokeLinecap="round" />
-      <path d="M 60,74 Q 74,70 76,56 Q 78,44 70,36"
-        fill="none" stroke="#00DDFF" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="70" cy="36" r="4" fill="#00FFFF" opacity="0.9" />
-
-      {/* angular cat ears with inner glow */}
-      <polygon points="20,42 28,12 46,38" fill="#1AAAD4" />
-      <polygon points="24,40 29,18 42,38" fill="#005588" />
-      <circle cx="32" cy="22" r="3" fill="#00FFFF" opacity="0.7" />
-      <polygon points="50,38 68,12 76,42" fill="#1AAAD4" />
-      <polygon points="54,38 67,18 72,40" fill="#005588" />
-      <circle cx="64" cy="22" r="3" fill="#00FFFF" opacity="0.7" />
+      {/* large branched horns */}
+      <line x1="34" y1="22" x2="24" y2="2" stroke="#FF6644" strokeWidth="5" strokeLinecap="round" />
+      <line x1="24" y1="2" x2="14" y2="-4" stroke="#FF6644" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="24" y1="2" x2="16" y2="-6" stroke="#FF6644" strokeWidth="3" strokeLinecap="round" />
+      <line x1="24" y1="8" x2="12" y2="4" stroke="#FF6644" strokeWidth="3" strokeLinecap="round" />
+      <line x1="62" y1="22" x2="72" y2="2" stroke="#FF6644" strokeWidth="5" strokeLinecap="round" />
+      <line x1="72" y1="2" x2="82" y2="-4" stroke="#FF6644" strokeWidth="3.5" strokeLinecap="round" />
+      <line x1="72" y1="2" x2="80" y2="-6" stroke="#FF6644" strokeWidth="3" strokeLinecap="round" />
+      <line x1="72" y1="8" x2="84" y2="4" stroke="#FF6644" strokeWidth="3" strokeLinecap="round" />
 
       {/* head */}
-      <rect x="14" y="36" width="68" height="52" rx="16" fill="#22B0EE" />
-      {/* visor stripe */}
-      <rect x="14" y="36" width="68" height="16" rx="12" fill="#0077AA" />
+      <ellipse cx="48" cy="48" rx="34" ry="30" fill="#EE22AA" />
 
-      {/* glowing cyan eyes — nekomata style */}
-      <circle cx="32" cy="57" r="12" fill="#0A0A1E" />
-      <circle cx="32" cy="57" r="9" fill="#00EEFF" opacity="0.95" />
-      <circle cx="32" cy="57" r="5" fill="#007788" />
-      <circle cx="36" cy="53" r="3.5" fill="white" opacity="0.9" />
-      <circle cx="64" cy="57" r="12" fill="#0A0A1E" />
-      <circle cx="64" cy="57" r="9" fill="#00EEFF" opacity="0.95" />
-      <circle cx="64" cy="57" r="5" fill="#007788" />
-      <circle cx="68" cy="53" r="3.5" fill="white" opacity="0.9" />
+      {/* large alebrije diamond pattern */}
+      <polygon points="48,22 60,38 48,54 36,38" fill="#FFEE00" opacity="0.95" />
+      <polygon points="48,28 58,38 48,48 38,38" fill="#FF8800" opacity="0.8" />
+      <polygon points="48,32 56,38 48,44 40,38" fill="#FF4400" opacity="0.6" />
 
-      {/* cat nose */}
-      <polygon points="48,68 43,74 53,74" fill="#FF88AA" />
-      {/* cat mouth */}
-      <path d="M 40,76 L 48,84 L 56,76" fill="none" stroke="#005580" strokeWidth="2.5" strokeLinecap="round" />
+      {/* dot pattern around diamond */}
+      <circle cx="26" cy="38" r="5" fill="#00DDAA" />
+      <circle cx="70" cy="38" r="5" fill="#00DDAA" />
+      <circle cx="34" cy="26" r="4" fill="#44CCFF" />
+      <circle cx="62" cy="26" r="4" fill="#44CCFF" />
+      <circle cx="34" cy="52" r="4" fill="#FF44CC" />
+      <circle cx="62" cy="52" r="4" fill="#FF44CC" />
 
-      {/* circuit chest */}
-      <rect x="20" y="84" width="56" height="10" rx="5" fill="#0088BB" />
-      <circle cx="36" cy="89" r="3" fill="#00FFFF" opacity="0.8" />
-      <circle cx="48" cy="89" r="3" fill="#00FFFF" opacity="0.8" />
-      <circle cx="60" cy="89" r="3" fill="#00FFFF" opacity="0.8" />
-    </>
-  );
-}
+      {/* big expressive eyes */}
+      <circle cx="28" cy="42" r="13" fill="#0A1A0A" />
+      <circle cx="28" cy="42" r="10" fill="#00CC44" />
+      <circle cx="28" cy="42" r="6" fill="#00FF88" />
+      <circle cx="33" cy="37" r="4" fill="white" opacity="0.9" />
+      <circle cx="68" cy="42" r="13" fill="#0A1A0A" />
+      <circle cx="68" cy="42" r="10" fill="#00CC44" />
+      <circle cx="68" cy="42" r="6" fill="#00FF88" />
+      <circle cx="73" cy="37" r="4" fill="white" opacity="0.9" />
 
-function NyanbotAdult() {
-  return (
-    <>
-      <Shadow cy={92} rx={30} />
-      {/* nekomata TWO large glowing tails */}
-      <path d="M 62,72 Q 90,58 92,36 Q 94,16 80,10"
-        fill="none" stroke="#005588" strokeWidth="10" strokeLinecap="round" />
-      <path d="M 62,72 Q 90,58 92,36 Q 94,16 80,10"
-        fill="none" stroke="#00CCFF" strokeWidth="5" strokeLinecap="round" />
-      <circle cx="80" cy="10" r="7" fill="#00FFFF" />
-      <circle cx="80" cy="10" r="4" fill="#008899" />
+      {/* jaguar muzzle */}
+      <ellipse cx="48" cy="58" rx="10" ry="7" fill="#CC0088" />
+      <polygon points="48,58 44,66 52,66" fill="#AA0066" />
+      {/* muzzle dots */}
+      <circle cx="38" cy="56" r="2" fill="#FF44CC" opacity="0.8" />
+      <circle cx="42" cy="58" r="2" fill="#FF44CC" opacity="0.8" />
+      <circle cx="54" cy="58" r="2" fill="#FF44CC" opacity="0.8" />
+      <circle cx="58" cy="56" r="2" fill="#FF44CC" opacity="0.8" />
 
-      <path d="M 60,75 Q 92,72 94,52 Q 96,34 82,24"
-        fill="none" stroke="#005588" strokeWidth="9" strokeLinecap="round" />
-      <path d="M 60,75 Q 92,72 94,52 Q 96,34 82,24"
-        fill="none" stroke="#00CCFF" strokeWidth="4" strokeLinecap="round" />
-      <circle cx="82" cy="24" r="6" fill="#00FFFF" />
-      <circle cx="82" cy="24" r="3" fill="#008899" />
+      {/* jaguar body */}
+      <ellipse cx="46" cy="76" rx="28" ry="16" fill="#EE22AA" />
+      {/* body zigzag pattern */}
+      <path d="M 22,72 L 28,68 L 34,72 L 40,68 L 46,72 L 52,68 L 58,72 L 64,68 L 70,72"
+        fill="none" stroke="#44CCFF" strokeWidth="2.5" opacity="0.85" />
+      {/* body dots */}
+      <circle cx="32" cy="78" r="4" fill="#00DDAA" opacity="0.85" />
+      <circle cx="48" cy="80" r="4" fill="#FFEE00" opacity="0.85" />
+      <circle cx="62" cy="78" r="4" fill="#44CCFF" opacity="0.85" />
 
-      {/* antenna */}
-      <line x1="48" y1="2" x2="48" y2="18" stroke="#C0D8E8" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="48" cy="4" r="6" fill="#00FFFF" />
-      <circle cx="48" cy="4" r="3" fill="#007788" />
+      {/* large decorated tail */}
+      <path d="M 70,74 Q 88,78 92,62 Q 96,48 84,42"
+        fill="none" stroke="#CC1188" strokeWidth="10" strokeLinecap="round" />
+      <path d="M 70,74 Q 88,78 92,62 Q 96,48 84,42"
+        fill="none" stroke="#FFEE00" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="84" cy="42" r="6" fill="#00DDAA" />
+      <circle cx="84" cy="42" r="3" fill="#FF8800" />
 
-      {/* sharp angular cat ears with cyber glow */}
-      <polygon points="12,40 22,4 44,36" fill="#1AAAD4" />
-      <polygon points="16,38 23,12 40,36" fill="#004466" />
-      <circle cx="26" cy="16" r="4" fill="#00FFFF" opacity="0.8" />
-      <polygon points="52,36 74,4 84,40" fill="#1AAAD4" />
-      <polygon points="56,36 73,12 80,38" fill="#004466" />
-      <circle cx="70" cy="16" r="4" fill="#00FFFF" opacity="0.8" />
-
-      {/* head */}
-      <rect x="8" y="30" width="80" height="52" rx="18" fill="#22B0EE" />
-      {/* visor */}
-      <rect x="8" y="30" width="80" height="18" rx="14" fill="#006699" />
-
-      {/* large glowing demon eyes */}
-      <circle cx="28" cy="54" r="14" fill="#040A14" />
-      <circle cx="28" cy="54" r="11" fill="#00EEFF" opacity="0.95" />
-      <circle cx="28" cy="54" r="6" fill="#006677" />
-      <circle cx="33" cy="49" r="4" fill="white" opacity="0.9" />
-      <circle cx="68" cy="54" r="14" fill="#040A14" />
-      <circle cx="68" cy="54" r="11" fill="#00EEFF" opacity="0.95" />
-      <circle cx="68" cy="54" r="6" fill="#006677" />
-      <circle cx="73" cy="49" r="4" fill="white" opacity="0.9" />
-
-      {/* cat nose */}
-      <polygon points="48,66 42,73 54,73" fill="#FF88AA" />
-      {/* cat mouth */}
-      <path d="M 38,75 L 48,84 L 58,75" fill="none" stroke="#004466" strokeWidth="3" strokeLinecap="round" />
-
-      {/* silver cyber armor body */}
-      <rect x="10" y="82" width="76" height="30" rx="12" fill="#BDD4E8" />
-      {/* chest armor plate */}
-      <rect x="22" y="86" width="52" height="20" rx="8" fill="#D4E8F4" />
-      {/* circuit rune dots */}
-      <circle cx="34" cy="94" r="5" fill="#00DDFF" opacity="0.9" />
-      <circle cx="48" cy="94" r="5" fill="#00DDFF" opacity="0.9" />
-      <circle cx="62" cy="94" r="5" fill="#00DDFF" opacity="0.9" />
-      <line x1="34" y1="94" x2="62" y2="94" stroke="#0088BB" strokeWidth="2" />
-      {/* additional rune detail */}
-      <line x1="34" y1="89" x2="34" y2="99" stroke="#0088BB" strokeWidth="1.5" />
-      <line x1="62" y1="89" x2="62" y2="99" stroke="#0088BB" strokeWidth="1.5" />
-
-      {/* legs */}
-      <rect x="12" y="106" width="28" height="14" rx="7" fill="#0E88CC" />
-      <rect x="56" y="106" width="28" height="14" rx="7" fill="#0E88CC" />
-      {/* feet */}
-      <rect x="8" y="114" width="32" height="10" rx="6" fill="#0066AA" />
-      <rect x="56" y="114" width="32" height="10" rx="6" fill="#0066AA" />
+      {/* paws with claw detail */}
+      <ellipse cx="28" cy="88" rx="14" ry="8" fill="#CC1188" />
+      <ellipse cx="58" cy="88" rx="14" ry="8" fill="#CC1188" />
+      {/* paw dots */}
+      <circle cx="22" cy="90" r="3" fill="#FF44CC" opacity="0.7" />
+      <circle cx="28" cy="92" r="3" fill="#FF44CC" opacity="0.7" />
+      <circle cx="34" cy="90" r="3" fill="#FF44CC" opacity="0.7" />
+      <circle cx="52" cy="90" r="3" fill="#FF44CC" opacity="0.7" />
+      <circle cx="58" cy="92" r="3" fill="#FF44CC" opacity="0.7" />
+      <circle cx="64" cy="90" r="3" fill="#FF44CC" opacity="0.7" />
     </>
   );
 }
 
 // ════════════════════════════════════════════════════════════
-// DEAD — greyscale X-eyes
+// DEAD — grey X eyes
 // ════════════════════════════════════════════════════════════
 function DeadSprite() {
   return (
     <>
-      <ellipse cx="48" cy="58" rx="34" ry="32" fill="#444455" />
-      <ellipse cx="48" cy="60" rx="22" ry="20" fill="#333344" />
+      <ellipse cx="48" cy="56" rx="34" ry="32" fill="#444455" />
+      <ellipse cx="48" cy="58" rx="22" ry="20" fill="#333344" />
       <line x1="28" y1="40" x2="42" y2="54" stroke="#222233" strokeWidth="5" strokeLinecap="round" />
       <line x1="42" y1="40" x2="28" y2="54" stroke="#222233" strokeWidth="5" strokeLinecap="round" />
       <line x1="54" y1="40" x2="68" y2="54" stroke="#222233" strokeWidth="5" strokeLinecap="round" />
       <line x1="68" y1="40" x2="54" y2="54" stroke="#222233" strokeWidth="5" strokeLinecap="round" />
-      <path d="M 34,70 Q 48,64 62,70" fill="none" stroke="#222233" strokeWidth="3.5" strokeLinecap="round" />
+      <path d="M 34,68 Q 48,62 62,68" fill="none" stroke="#222233" strokeWidth="3.5" strokeLinecap="round" />
     </>
   );
 }
 
 // ════════════════════════════════════════════════════════════
-// Sprite lookup
+// Lookup table
 // ════════════════════════════════════════════════════════════
-const SPRITE_MAP: Record<string, Record<string, React.ReactElement>> = {
-  pikumon: {
-    egg: <PikumonEgg />, baby: <PikumonBaby />, adult: <PikumonAdult />, dead: <DeadSprite />,
-  },
-  totomon: {
-    egg: <TotomonEgg />, baby: <TotomonBaby />, adult: <TotomonAdult />, dead: <DeadSprite />,
-  },
-  nyanbot: {
-    egg: <NyanbotEgg />, baby: <NyanbotBaby />, adult: <NyanbotAdult />, dead: <DeadSprite />,
-  },
+const MAP: Record<string, Record<string, React.ReactElement>> = {
+  unicornio: { egg: <UnicornioEgg />, baby: <UnicornioBaby />, adult: <UnicornioAdult />, dead: <DeadSprite /> },
+  dragon:    { egg: <DragonEgg />,    baby: <DragonBaby />,    adult: <DragonAdult />,    dead: <DeadSprite /> },
+  alebrije:  { egg: <AlebrjeEgg />,   baby: <AlebrjeBaby />,   adult: <AlebrjeAdult />,   dead: <DeadSprite /> },
 };
 
 export function MonsterSprite({ monsterId, stage, size = 128, className, style }: Props) {
-  const content = SPRITE_MAP[monsterId]?.[stage]
-    ?? SPRITE_MAP[monsterId]?.egg
-    ?? SPRITE_MAP.pikumon.egg;
-
-  // Nyanbot adult is taller (has tails going up + legs)
-  const viewH = (monsterId === 'nyanbot' && stage === 'adult') ? 130 : 96;
-  const viewW = (stage === 'adult') ? 100 : 96;
+  const content = MAP[monsterId]?.[stage] ?? MAP[monsterId]?.egg ?? MAP.unicornio.egg;
+  const viewH = stage === 'adult' ? 130 : 96;
 
   return (
     <svg
-      viewBox={`0 0 ${viewW} ${viewH}`}
+      viewBox={`0 0 96 ${viewH}`}
       width={size}
       height={size}
       style={{ display: 'block', margin: '0 auto', overflow: 'visible', ...style }}

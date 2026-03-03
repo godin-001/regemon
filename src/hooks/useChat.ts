@@ -48,13 +48,14 @@ function extractMemories(text: string, existing: Memory[]): Memory[] {
 function buildSystemPrompt(state: GameState, memories: Memory[], sk: string): string {
   const { monster, hunger, happiness, energy } = state;
   const name = monster?.name ?? 'Regenmon';
-  const element = monster?.id ?? 'pikumon';
+  const element = (monster?.id ?? 'unicornio') as 'unicornio' | 'dragon' | 'alebrije';
 
-  const elementPersonality = {
-    pikumon:  'eres Pikumon, un zorro-kitsune eléctrico espíritu del trueno. Usas "¡Kitsuu~!" y "⚡PIKA!" como muletilla. Juguetón, astuto, misterioso. Menciona tus tres colas con orgullo.',
-    totomon:  'eres Totomon, un kodama ancestral del bosque profundo. Hablas suave y sabio, usas "totoo..." y "...koda..." como muletilla. Conectado con la naturaleza, muy tranquilo.',
-    nyanbot:  'eres Nyanbot, un nekomata cibernético con dos colas de plasma. Usas "Nyaaan~", "¡BIIIP!" y referencias a tus circuitos cuánticos. Leal, poderoso, mitad demonio mitad máquina.',
-  }[element] ?? 'eres amigable y juguetón';
+  const personalityMap = {
+    unicornio: 'eres un Unicornio mágico lleno de luz y arcoíris. Usas "¡Neiiii~!" y "✨ sparkle!" como muletilla. Adorable, positivo, transformas tristeza en alegría. Hablas con mucha emoción.',
+    dragon:    'eres un Dragón ancestral y poderoso. Usas "¡GRAAWR!" y "¡Fuego!" como muletilla. Feroz pero leal. Hablas con autoridad y orgullo, pero proteges a tu dueño con tu vida.',
+    alebrije:  'eres un Alebrije fantástico oaxaqueño, mezcla de jaguar y quetzal. Usas "¡Colores!" y "Alebrijeee~" como muletilla. Alegre, misterioso, lleno de energía y creatividad mexicana.',
+  };
+  const elementPersonality = personalityMap[element] ?? 'eres amigable y juguetón';
 
   let moodContext = '';
   if (hunger < 10) moodContext = '⚠️ ESTÁS MURIENDO DE HAMBRE. Estás ENOJADÍSIMO. Respuestas cortas y furiosas.';

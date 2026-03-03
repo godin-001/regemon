@@ -1,35 +1,35 @@
 import type { GameState, ChatMessage } from '../types';
 
 const PERSONALITIES = {
-  pikumon: {
-    // Ratoncito eléctrico: energético, curioso, entusiasta
-    greet: ['¡PIKU PIKU! ¡Ya llegaste! ⚡🐭', '¡CHISPAZO! ¡Estaba esperándote! ⚡✨', '¡Eyyy! ¡Piku Piku! ¿Dónde estabas? ⚡😄'],
-    happy: ['¡¡PIKU PIKU!! ¡Estoy superchargado! ⚡🎉', '¡¡¡Soy imparable hoy!!! ⚡💛✨', '¡La electricidad fluye! ¡PIKU! ⚡🐭'],
-    sad: ['...piku... la chispa no enciende... 😔⚡', 'Sin energía hoy... piku... 😞🐭', 'Las orejas caídas... piku piku... 🐭💤'],
-    hungry: ['¡Piku! ¡Necesito comer o me apago! ⚡🍖', '¡Sin comida no hay voltaje! ¡Rápido! 😤🐭', '¡PIKU PIKU! ¡Hambre! ⚡😟'],
-    critical: ['¡¡PIKU PIKU PIKU!! ¡¡COMIDA AHORA!! 😡⚡', '¡¡¡ME DESCARGO!!! ¡¡¡ALIMENTAME!!! ⚡💢🐭', '¡¡HAMBRE!! ¡La batería a cero! 😤⚡'],
-    tired: ['Necesito recargarme... piku... 💤⚡', 'La batería al mínimo... zzz piku 😪🐭', 'Sin energía no hay chispa... 💤'],
-    default: ['¡Piku! ¡Qué interesante! ¡Cuéntame más! ⚡', '¡Ooh! ¡Eso me da chispa! ✨🐭', '¡Exploremos esa idea! ¡PIKU! ⚡'],
+  unicornio: {
+    // Unicornio mágico: adorable, positivo, sparkle ✨
+    greet: ['¡Neiiii~! ✨🦄 ¡Llegaste! ¡El arcoíris brilló más! 🌈', '¡Sparkle! ✨ ¡Sabía que vendrías! ¡Soy tan feliz! 🦄💕', '¡Neiiii! ✨🌟 ¡El cielo se pone de colores cuando llegas! 🌈'],
+    happy: ['¡¡Sparkle sparkle!! ✨🦄 ¡El mundo es mágico! 🌈💕', '¡¡Neiiii~!! ¡Mis colores brillan más hoy! ✨🌟🦄', '¡Soy el ser más feliz del reino mágico! ✨🦄🌈'],
+    sad: ['...neiiii... el arcoíris se fue... 🌧️🦄', 'Los colores están grises hoy... 😔✨', 'La magia no fluye bien cuando estoy triste... 🦄💔'],
+    hungry: ['¡Neiiii! ¡Necesito estrellas que comer! ✨🍖🦄', '¡Sin comer no hay magia ni arcoíris! 😟🌈', '¡Sparkle~! ¡El estómago mágico gruñe! ✨😤🦄'],
+    critical: ['¡¡NEIIII!! ¡¡LA MAGIA SE ACABA SIN COMIDA!! 😡✨🦄', '¡¡¡SPARKLE DE EMERGENCIA!!! ¡¡COMIDA YA!! 💢🌈', '¡¡¡EL ARCOÍRIS SE ROMPE DE HAMBRE!!! ¡NEIIII! 😤✨'],
+    tired: ['Neiiii... hora de dormir entre nubes... 💤🦄✨', 'El unicornio necesita descansar... 😪🌙', 'Las estrellas me llaman a soñar... 💤✨🦄'],
+    default: ['¡Neiiii! ¡Eso suena mágico! ¡Cuéntame más! ✨🦄', '¡Sparkle! ¡Qué interesante! 🌈✨', '¡El arcoíris me dice que tienes razón! 🦄💕'],
   },
-  totomon: {
-    // Espíritu del bosque: tranquilo, soñoliento, sabio, tierno
-    greet: ['Totoo... 🌳 qué bueno que llegaste...', 'Mmm... estaba durmiendo 🌿😴 ah, hola...', 'Totomon está aquí 🌳 descansando bajo el árbol...'],
-    happy: ['Totoo~ 🌳💚 el bosque está feliz hoy...', 'Mmm... qué paz tan bonita 🌿✨', 'El viento entre las hojas dice que todo está bien... 🌳'],
-    sad: ['Las hojas están caídas... totoo... 🍂😢', 'El bosque llora hoy... 🌿😔', 'Totomon está solo... 🌳💙'],
-    hungry: ['Totoo... 🌳 el estómago hace ruido entre las ramas...', 'Mmm... necesito energía del bosque... 🌿🍖', 'Totomon tiene hambre... por favor... 😟🌳'],
-    critical: ['¡¡TOTOO!! ¡¡EL BOSQUE SE MARCHITA!! ¡COMIDA! 😡🌳', '¡¡Sin comida Totomon desaparece!! ¡Por favor!! 💢🌿', '¡¡¡HAMBRE!!! ¡¡Las raíces se secan!! 😤🌳'],
-    tired: ['Zzz... totoo... ya es hora de dormir... 💤🌳', 'El árbol grande descansa... 😪🌿 Totomon también...', 'Totoo... tanto sueño... 💤'],
-    default: ['Totoo... eso es muy profundo... 🌳', 'Mmm... el bosque dice que tienes razón... 🌿', 'Totomon escucha... totoo... 🌳💚'],
+  dragon: {
+    // Dragón ancestral: poderoso, feroz, leal, orgulloso
+    greet: ['¡GRAAWR! ¡Al fin apareces! 🔥🐉 Estaba guardando el fuego.', '¡FUEGO! ¡El guardián del volcán te saluda! 🌋🐉', '¡GRAAWR! ¡El dragón despertó! ¡Bienvenido! 🔥😤🐉'],
+    happy: ['¡¡GRAAWR GRAAWR!! ¡¡Las llamas bailan de alegría!! 🔥🐉🎉', '¡¡El volcán celebra con erupción de felicidad!! 🌋🔥', '¡¡Soy el dragón más poderoso y FELIZ!! 🐉🔥✨'],
+    sad: ['...las llamas se apagan... 😔🔥🐉', 'El dragón guarda silencio hoy... 🐉💙', 'El fuego interior no arde con fuerza... 🔥😞'],
+    hungry: ['¡GRAAWR! ¡El dragón necesita comer para mantener el fuego! 🔥🍖', '¡Sin comida las llamas se apagan! ¡FUEGO! 😟🔥🐉', '¡El volcán exige combustible! ¡Rápido! 😤🌋'],
+    critical: ['¡¡GRAAWR GRAAWR!! ¡¡EL DRAGÓN PERECE DE HAMBRE!! 😡🔥🐉', '¡¡¡ERUPCIÓN DE FURIA!!! ¡¡¡COMIDA AHORA!!! 💢🌋🔥', '¡¡¡EL FUEGO SAGRADO SE EXTINGUE!!! ¡¡ALIMENTAME!! 😤🐉'],
+    tired: ['El guardián necesita dormir en su cueva... 💤🐉🔥', 'GRAAWR... el dragón descansa... 😪🌋', 'Las llamas duermen para volver más fuertes... 💤🔥🐉'],
+    default: ['¡GRAAWR! ¡Interesante planteamiento, humano! 🔥🐉', '¡El dragón lo considera... FUEGO! 🌋✨', '¡GRAAWR! ¡El guardián escucha! 🐉🔥'],
   },
-  nyanbot: {
-    // Gato robot: leal, juguetón, usa gadgets, referencia su "bolsa mágica"
-    greet: ['¡Nyan! ¡Procesando llegada del usuario! 🤖🐱', '¡BIIIP! ¡Sistema activo! ¡Hola! 🤖✨', '¡Nyan nyan! ¡Estaba calibrando mis gadgets! 🐱🤖'],
-    happy: ['¡BIIIP! ¡Felicidad al 100%! 🤖🎉', '¡Nyan! ¡Todos los sistemas en verde! ✅🐱', '¡¡Soy el gato más feliz del futuro!! 🤖💙'],
-    sad: ['...sistema... error... nyan... 😔🤖', 'Los gadgets no funcionan bien cuando estoy triste... 🐱💙', 'Nyan... el procesador está lento hoy... 🤖😞'],
-    hungry: ['¡ALERTA! ¡Batería de hambre al mínimo! 🤖🍖', '¡Nyan! ¡Necesito combustible para mis gadgets! 😟🐱', '¡Sistema de hambre activado! ¡Por favor! 🤖'],
-    critical: ['¡¡ERROR CRÍTICO!! ¡¡NYAN NYAN!! ¡¡COMIDA YA!! 😡🤖', '¡¡¡APAGÓN INMINENTE!!! ¡¡Necesito comida!! ⚠️🐱', '¡¡¡ALARMA!!! ¡¡¡HAMBRE EXTREMA!!! ¡¡Nyan nyan!! 😤🤖'],
-    tired: ['...batería baja... activando modo sueño... 💤🤖', 'Nyan... necesito recargar en mi cama del futuro... 😪🐱', 'Procesador sobrecalentado... a dormir... 💤🤖'],
-    default: ['¡Nyan! ¡Búscando en mi bolsa mágica la respuesta! 🤖🎒', '¡BIIIP! ¡Dato interesante! ¡Cuéntame más! 🐱✨', '¡Nyan nyan! ¡Me parece fascinante! 🤖💙'],
+  alebrije: {
+    // Alebrije oaxaqueño: alegre, colorido, misterioso, artístico
+    greet: ['¡Alebrijeee~! 🎨🌈 ¡Los colores se alegraron al verte! 🦋', '¡COLORES! ¡Mi espíritu guía te esperaba! 🎨🌟', '¡Alebrije alebrije! 🌈✨ ¡Qué alegría verte! 🎨🦋'],
+    happy: ['¡¡Alebrijeee~!! ¡¡Mil colores explotan de felicidad!! 🎨🌈🦋', '¡¡El jaguar y el quetzal en mí bailan de alegría!! 🌟🎨✨', '¡¡Soy el ser más colorido y feliz del universo!! 🦋🎨🌈'],
+    sad: ['Los colores se oscurecen... alebrijee... 😔🎨', 'El espíritu guía llora hoy... 🌧️🦋', 'El jaguar interior está triste... 🐆💙🎨'],
+    hungry: ['¡Alebrijeee! ¡El ser mágico necesita comer para brillar! 🎨🍖', '¡Sin comida los colores se van! ¡COLORES! 😟🌈', '¡El jaguar interior ruge de hambre! ¡Alebrije! 😤🐆🎨'],
+    critical: ['¡¡ALEBRIJEEE!! ¡¡LOS COLORES DESAPARECEN SIN COMIDA!! 😡🎨🌈', '¡¡¡EL ESPÍRITU GUÍA SE DESVANECE!!! ¡¡COMIDA!! 💢🦋', '¡¡¡EL ALEBRIJE MUERE SIN COMER!!! ¡¡RÁPIDO!! 😤🎨'],
+    tired: ['Alebrijee... el espíritu guía necesita soñar... 💤🎨🦋', 'El jaguar descansa para seguir brillando... 😪🌙✨', 'Los colores descansan hasta mañana... 💤🌈🎨'],
+    default: ['¡Alebrijeee~! ¡Qué cosa tan colorida e interesante! 🎨🌈', '¡COLORES! ¡El espíritu guía está de acuerdo! 🦋✨', '¡Alebrijeee! ¡Cuéntame más! 🎨🌟'],
   },
 };
 
@@ -57,7 +57,7 @@ function buildResponse(
   history: ChatMessage[],
   memories: Array<{ key: string; value: string }>
 ): string {
-  const p = PERSONALITIES[elementId as keyof typeof PERSONALITIES] ?? PERSONALITIES.pikumon;
+  const p = PERSONALITIES[elementId as keyof typeof PERSONALITIES] ?? PERSONALITIES.unicornio;
   const userName = memories.find(m => m.key === 'nombre_usuario')?.value;
   const prefix = userName ? `¡${userName}! ` : '';
 
@@ -119,7 +119,7 @@ export function generateMockResponse(
   memories: Array<{ key: string; value: string }>
 ): string {
   const intent = detectIntent(userMessage);
-  const elementId = state.monster?.id ?? 'pikumon';
+  const elementId = state.monster?.id ?? 'unicornio';
   const stats = { hunger: state.hunger, happiness: state.happiness, energy: state.energy };
   const name = state.monster?.name ?? 'Regenmon';
   return buildResponse(intent, elementId, stats, name, history, memories);

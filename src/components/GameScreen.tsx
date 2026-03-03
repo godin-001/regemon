@@ -117,7 +117,7 @@ export function GameScreen({
             filter: isDead ? 'grayscale(1) brightness(0.6)' : isCriticalHunger ? 'drop-shadow(0 0 12px #ff4444)' : undefined,
           }}>
             <MonsterSprite
-              monsterId={monster?.id ?? 'pikumon'}
+              monsterId={monster?.id ?? 'unicornio'}
               stage={isDead ? 'dead' : stage}
               size={180}
             />

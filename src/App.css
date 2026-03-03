@@ -124,9 +124,11 @@ body {
 
 .nes-container .title {
   background: var(--bg-base) !important;
-  font-size: 0.7rem;
-  color: var(--golden) !important;
-  text-shadow: var(--glow-golden);
+  font-size: 0.72rem;
+  padding: 0 8px !important;
+  letter-spacing: 1px;
+  /* color is set via inline style from monster.color; text-shadow makes it pop */
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 1px 3px #000 !important;
 }
 
 /* ── NES buttons: anime style ───────────────────────── */
@@ -219,21 +221,30 @@ body {
 /* ── Progress bars ────────────────────────────────────  */
 .nes-progress {
   width: 100%;
-  height: 18px;
-  background-color: #0a0a20 !important;
-  border-color: var(--dim) !important;
+  height: 20px !important;
+  background-color: #1a1a35 !important;  /* slightly lighter track so fill shows at low % */
 }
 
-.nes-progress.is-error::-webkit-progress-value  { background: linear-gradient(90deg, #ff3366, var(--sakura)); box-shadow: var(--glow-sakura); }
-.nes-progress.is-primary::-webkit-progress-value { background: linear-gradient(90deg, #0055cc, var(--electric)); box-shadow: var(--glow-electric); }
-.nes-progress.is-warning::-webkit-progress-value { background: linear-gradient(90deg, #cc8800, var(--golden)); box-shadow: var(--glow-golden); }
-.nes-progress.is-success::-webkit-progress-value { background: linear-gradient(90deg, #007700, var(--neon-green)); }
+/* Border matches bar color for clear identification */
+.nes-progress.is-error   { border-color: var(--sakura)  !important; }
+.nes-progress.is-primary { border-color: var(--electric) !important; }
+.nes-progress.is-warning { border-color: var(--golden)   !important; }
+.nes-progress.is-success { border-color: #39ff14 !important; }
+
+/* Chrome/Safari — fill color + glow */
+.nes-progress.is-error::-webkit-progress-value   { background: linear-gradient(90deg, #cc1144, #ff4499); box-shadow: var(--glow-sakura); }
+.nes-progress.is-primary::-webkit-progress-value { background: linear-gradient(90deg, #0077cc, #00d4ff); box-shadow: var(--glow-electric); }
+.nes-progress.is-warning::-webkit-progress-value { background: linear-gradient(90deg, #bb8800, #ffd700); box-shadow: var(--glow-golden); }
+.nes-progress.is-success::-webkit-progress-value { background: linear-gradient(90deg, #00aa00, #39ff14); box-shadow: 0 0 8px #39ff14; }
+
+/* Chrome/Safari — track */
+.nes-progress::-webkit-progress-bar { background-color: #1a1a35; }
 
 /* Firefox */
-.nes-progress.is-error::-moz-progress-bar  { background: linear-gradient(90deg, #ff3366, var(--sakura)); }
-.nes-progress.is-primary::-moz-progress-bar { background: linear-gradient(90deg, #0055cc, var(--electric)); }
-.nes-progress.is-warning::-moz-progress-bar { background: linear-gradient(90deg, #cc8800, var(--golden)); }
-.nes-progress.is-success::-moz-progress-bar { background: linear-gradient(90deg, #007700, var(--neon-green)); }
+.nes-progress.is-error::-moz-progress-bar   { background: linear-gradient(90deg, #cc1144, #ff4499); }
+.nes-progress.is-primary::-moz-progress-bar { background: linear-gradient(90deg, #0077cc, #00d4ff); }
+.nes-progress.is-warning::-moz-progress-bar { background: linear-gradient(90deg, #bb8800, #ffd700); }
+.nes-progress.is-success::-moz-progress-bar { background: linear-gradient(90deg, #00aa00, #39ff14); }
 
 /* ── Animations ───────────────────────────────────────  */
 

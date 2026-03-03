@@ -1,4 +1,4 @@
-export type ElementType = 'pikumon' | 'totomon' | 'nyanbot';
+export type ElementType = 'unicornio' | 'dragon' | 'alebrije';
 export type LifeStage = 'egg' | 'baby' | 'adult' | 'dead';
 
 export interface Monster {
