@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { Monster } from '../types';
 import { MONSTER_TYPES } from '../data/monsters';
+import { PixelSprite } from './PixelSprite';
+import { getSprite } from '../sprites/pixelArt';
 
 interface Props {
   onSelect: (monster: Monster) => void;
@@ -103,13 +105,15 @@ export function SelectScreen({ onSelect }: Props) {
                   boxShadow: isSelected ? `0 0 10px ${m.color}55, inset 0 0 10px ${m.color}11` : 'none',
                 }}
               >
-                <span style={{
-                  fontSize: '2rem',
-                  lineHeight: 1,
-                  filter: isSelected ? `drop-shadow(0 0 8px ${m.color})` : 'none',
+                <div style={{
+                  filter: isSelected ? `drop-shadow(0 0 10px ${m.color})` : 'none',
+                  flexShrink: 0,
                 }}>
-                  {m.adultEmoji}
-                </span>
+                  <PixelSprite
+                    grid={getSprite(m.id, 'adult')}
+                    scale={1}
+                  />
+                </div>
                 <div style={{ flex: 1 }}>
                   <div style={{
                     fontSize: '0.7rem',

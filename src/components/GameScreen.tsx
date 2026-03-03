@@ -3,6 +3,8 @@ import type { GameState, TrainingState, TrainingCategory, EvaluateResult } from 
 import { StatBar } from './StatBar';
 import { FloatingStat } from './FloatingStat';
 import { TrainingScreen } from './TrainingScreen';
+import { PixelSprite } from './PixelSprite';
+import { getSprite } from '../sprites/pixelArt';
 import { STAGE_LABELS } from '../hooks/useTraining';
 
 interface FloatItem { id: string; text: string; color: string; }
@@ -23,13 +25,10 @@ interface Props {
   onFloatDone?: (id: string) => void;
 }
 
-function getEmoji(state: GameState): string {
-  if (!state.monster) return '🥚';
+function getFallbackEmoji(state: GameState): string {
   if (state.hunger < 10 && state.stage !== 'dead') return '😡🔥';
-  if (state.stage === 'egg') return state.monster.emoji;
-  if (state.stage === 'baby') return state.monster.babyEmoji;
-  if (state.stage === 'adult') return state.monster.adultEmoji;
-  return '💀';
+  if (state.stage === 'dead') return '💀';
+  return '';
 }
 
 function getStageName(stage: string): string {
@@ -116,13 +115,24 @@ export function GameScreen({
         {/* Pet + floats */}
         <div style={{ position: 'relative' }}>
           <FloatingStat items={floatItems} onDone={handleFloatDone} />
-          <div style={{
-            fontSize: '6rem', margin: '0.75rem 0',
-            animation: isDead ? 'none' : 'bounce 1s infinite alternate, glowPulse 3s ease-in-out infinite',
-            filter: isDead ? 'grayscale(1) opacity(0.5)' : undefined,
-          }}>
-            {getEmoji(state)}
-          </div>
+          {/* ── Pixel Art Sprite ─── */}
+          {isDead || isCriticalHunger ? (
+            <div style={{ fontSize: '5rem', margin: '0.75rem 0' }}>
+              {getFallbackEmoji(state)}
+            </div>
+          ) : (
+            <div style={{
+              margin: '0.75rem auto',
+              animation: 'bounce 1s infinite alternate, glowPulse 3s ease-in-out infinite',
+              display: 'inline-block',
+            }}>
+              <PixelSprite
+                grid={getSprite(monster?.id ?? 'pikumon', stage)}
+                scale={2}
+                style={{ imageRendering: 'pixelated' }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Reaction bubble */}
