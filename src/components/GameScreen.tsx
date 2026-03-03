@@ -128,7 +128,7 @@ export function GameScreen({
             }}>
               <PixelSprite
                 grid={getSprite(monster?.id ?? 'pikumon', stage)}
-                scale={2}
+                scale={3}
                 style={{ imageRendering: 'pixelated' }}
               />
             </div>
