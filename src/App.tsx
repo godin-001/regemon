@@ -15,6 +15,31 @@ import type { TrainingCategory } from './types';
 
 interface FloatItem { id: string; text: string; color: string; }
 
+// Decorative sakura petals
+function SakuraPetals() {
+  const petals = Array.from({ length: 6 }, (_, i) => ({
+    id: i,
+    left: `${10 + i * 15}%`,
+    delay: `${i * 1.5}s`,
+    duration: `${7 + i * 1.2}s`,
+    size: i % 2 === 0 ? '7px' : '5px',
+  }));
+  return (
+    <>
+      {petals.map(p => (
+        <div key={p.id} className="sakura-petal" style={{
+          left: p.left,
+          width: p.size,
+          height: p.size,
+          animationDelay: p.delay,
+          animationDuration: p.duration,
+          top: '-10px',
+        }} />
+      ))}
+    </>
+  );
+}
+
 function App() {
   const { ready, isLoggedIn, userName, storageKey, login, logout } = useAuth();
   const { state, chooseMonster, feed, play, sleep, chatStatEffect, reset } = useGame(storageKey);
@@ -91,6 +116,7 @@ function App() {
 
   return (
     <div className="app-wrapper">
+      <SakuraPetals />
       <Header
         isLoggedIn={isLoggedIn}
         userName={userName}

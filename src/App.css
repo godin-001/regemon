@@ -1,50 +1,280 @@
-* {
-  box-sizing: border-box;
+/* ══════════════════════════════════════════════════════
+   REGEMON — Anime × Pixel Art Theme
+   ══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+JP:wght@400;700&display=swap');
+
+/* ── CSS Variables ─────────────────────────────────── */
+:root {
+  --bg-deep:       #08080f;
+  --bg-base:       #0d0d1e;
+  --bg-card:       #12122a;
+  --bg-card2:      #0a0a20;
+
+  --sakura:        #ff6eb4;
+  --sakura-dark:   #c0396e;
+  --electric:      #00d4ff;
+  --electric-dark: #0099bb;
+  --golden:        #ffd700;
+  --neon-purple:   #b44bff;
+  --neon-green:    #39ff14;
+  --soft-white:    #e8e8ff;
+  --dim:           #7070aa;
+
+  --border-pixel:  2px solid;
+  --glow-sakura:   0 0 8px #ff6eb4, 0 0 20px #ff6eb455;
+  --glow-electric: 0 0 8px #00d4ff, 0 0 20px #00d4ff55;
+  --glow-golden:   0 0 8px #ffd700, 0 0 20px #ffd70055;
+  --glow-purple:   0 0 8px #b44bff, 0 0 20px #b44bff55;
 }
 
+/* ── Reset ─────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+/* ── Body: starfield ────────────────────────────────── */
 body {
-  background-color: #1a1a2e;
+  background-color: var(--bg-deep);
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, #ffffff55, transparent),
+    radial-gradient(1px 1px at 25% 60%, #ff6eb444, transparent),
+    radial-gradient(1px 1px at 50% 30%, #00d4ff44, transparent),
+    radial-gradient(1px 1px at 75% 80%, #b44bff44, transparent),
+    radial-gradient(1px 1px at 90% 20%, #ffd70044, transparent),
+    radial-gradient(1px 1px at 40% 90%, #ffffff44, transparent),
+    radial-gradient(1px 1px at 65% 10%, #ff6eb444, transparent),
+    radial-gradient(1px 1px at 85% 50%, #00d4ff44, transparent);
   min-height: 100vh;
   font-family: 'Press Start 2P', 'Courier New', monospace;
 }
 
+/* ── App wrapper ────────────────────────────────────── */
 .app-wrapper {
   min-height: 100vh;
   max-width: 640px;
   margin: 0 auto;
-  background-color: #16213e;
-  color: #e0e0e0;
+  background: linear-gradient(180deg, #0d0d1e 0%, #12122a 50%, #0d0d1e 100%);
+  color: var(--soft-white);
+  border-left: 1px solid #ffffff11;
+  border-right: 1px solid #ffffff11;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Scanline overlay (subtle anime CRT vibe) */
+.app-wrapper::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Gradient title ─────────────────────────────────── */
 .gradient-title {
-  font-size: 1.8rem;
-  background: linear-gradient(90deg, #ff6b35, #a29bfe, #4ecdc4, #a8e063);
+  font-size: 1.6rem;
+  background: linear-gradient(90deg, var(--sakura), var(--electric), var(--golden), var(--neon-purple));
+  background-size: 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0 0 0.25rem;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  animation: gradientShift 4s ease infinite;
 }
 
-/* ── Pet bounce ── */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── NES container overrides: anime glass panels ────── */
+.nes-container {
+  background: linear-gradient(135deg, #12122a 0%, #0a0a20 100%) !important;
+  border-color: var(--electric) !important;
+  color: var(--soft-white) !important;
+  box-shadow: 0 0 10px #00d4ff22, inset 0 0 20px #00000033;
+  position: relative;
+}
+
+.nes-container::before {
+  content: '◆';
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  font-size: 0.5rem;
+  color: var(--electric);
+  text-shadow: var(--glow-electric);
+}
+
+.nes-container.is-centered::before { display: none; }
+
+.nes-container.is-dark {
+  background: linear-gradient(135deg, #1a0a1a 0%, #0a0015 100%) !important;
+  border-color: var(--sakura) !important;
+  box-shadow: 0 0 10px #ff6eb422;
+}
+
+.nes-container .title {
+  background: var(--bg-base) !important;
+  font-size: 0.7rem;
+  color: var(--golden) !important;
+  text-shadow: var(--glow-golden);
+}
+
+/* ── NES buttons: anime style ───────────────────────── */
+.nes-btn {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.6rem !important;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.1s ease;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
+}
+
+.nes-btn:not(.is-disabled):hover {
+  transform: translateY(-2px);
+}
+
+.nes-btn:not(.is-disabled):active {
+  transform: translateY(1px);
+}
+
+.nes-btn:disabled, .nes-btn.is-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Primary → electric blue glow */
+.nes-btn.is-primary {
+  background-color: #003366 !important;
+  border-color: var(--electric) !important;
+  color: var(--electric) !important;
+}
+.nes-btn.is-primary:not(.is-disabled):hover {
+  box-shadow: var(--glow-electric);
+}
+
+/* Success → neon green glow */
+.nes-btn.is-success {
+  background-color: #003300 !important;
+  border-color: #39ff14 !important;
+  color: #39ff14 !important;
+}
+.nes-btn.is-success:not(.is-disabled):hover {
+  box-shadow: 0 0 8px #39ff14, 0 0 20px #39ff1444;
+}
+
+/* Warning → golden glow */
+.nes-btn.is-warning {
+  background-color: #332200 !important;
+  border-color: var(--golden) !important;
+  color: var(--golden) !important;
+}
+.nes-btn.is-warning:not(.is-disabled):hover {
+  box-shadow: var(--glow-golden);
+}
+
+/* Error → sakura glow */
+.nes-btn.is-error {
+  background-color: #33001a !important;
+  border-color: var(--sakura) !important;
+  color: var(--sakura) !important;
+}
+.nes-btn.is-error:not(.is-disabled):hover {
+  box-shadow: var(--glow-sakura);
+}
+
+/* Default button */
+.nes-btn:not(.is-primary):not(.is-success):not(.is-warning):not(.is-error):not(.is-disabled) {
+  background-color: #1a1a35 !important;
+  border-color: var(--neon-purple) !important;
+  color: var(--soft-white) !important;
+}
+.nes-btn:not(.is-primary):not(.is-success):not(.is-warning):not(.is-error):not(.is-disabled):hover {
+  box-shadow: var(--glow-purple);
+}
+
+/* ── Input fields ────────────────────────────────────── */
+.nes-input {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.65rem !important;
+  background-color: #08081a !important;
+  border-color: var(--electric) !important;
+  color: var(--soft-white) !important;
+  box-shadow: inset 0 0 8px #00000066;
+}
+
+.nes-input:focus {
+  box-shadow: var(--glow-electric), inset 0 0 8px #00000066 !important;
+  outline: none !important;
+}
+
+/* ── Progress bars ────────────────────────────────────  */
+.nes-progress {
+  width: 100%;
+  height: 18px;
+  background-color: #0a0a20 !important;
+  border-color: var(--dim) !important;
+}
+
+.nes-progress.is-error::-webkit-progress-value  { background: linear-gradient(90deg, #ff3366, var(--sakura)); box-shadow: var(--glow-sakura); }
+.nes-progress.is-primary::-webkit-progress-value { background: linear-gradient(90deg, #0055cc, var(--electric)); box-shadow: var(--glow-electric); }
+.nes-progress.is-warning::-webkit-progress-value { background: linear-gradient(90deg, #cc8800, var(--golden)); box-shadow: var(--glow-golden); }
+.nes-progress.is-success::-webkit-progress-value { background: linear-gradient(90deg, #007700, var(--neon-green)); }
+
+/* Firefox */
+.nes-progress.is-error::-moz-progress-bar  { background: linear-gradient(90deg, #ff3366, var(--sakura)); }
+.nes-progress.is-primary::-moz-progress-bar { background: linear-gradient(90deg, #0055cc, var(--electric)); }
+.nes-progress.is-warning::-moz-progress-bar { background: linear-gradient(90deg, #cc8800, var(--golden)); }
+.nes-progress.is-success::-moz-progress-bar { background: linear-gradient(90deg, #007700, var(--neon-green)); }
+
+/* ── Animations ───────────────────────────────────────  */
+
+/* Pet bounce */
 @keyframes bounce {
-  from { transform: translateY(0px); }
-  to   { transform: translateY(-12px); }
+  from { transform: translateY(0px) scale(1); }
+  to   { transform: translateY(-14px) scale(1.05); }
 }
 
-/* ── Chat message appear ── */
+/* Glow pulse for pet */
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 6px var(--sakura)) drop-shadow(0 0 12px var(--electric)); }
+  50%       { filter: drop-shadow(0 0 14px var(--golden)) drop-shadow(0 0 24px var(--neon-purple)); }
+}
+
+/* Sakura petals */
+@keyframes petalFall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+}
+
+/* Star twinkle */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}
+
+/* Chat message appear */
 @keyframes msgIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
 }
 
-/* ── Floating stat text ── */
+/* Floating stat text */
 @keyframes floatUp {
-  0%   { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-40px); }
+  0%   { opacity: 1;   transform: translateY(0) scale(1); }
+  50%  { opacity: 0.8; transform: translateY(-20px) scale(1.1); }
+  100% { opacity: 0;   transform: translateY(-45px) scale(0.9); }
 }
 
-/* ── Typing dots ── */
+/* Typing dots */
 .typing-dots::after {
   content: '';
   animation: dots 1.2s infinite steps(4, end);
@@ -57,50 +287,180 @@ body {
   100% { content: ''; }
 }
 
-/* ── NES overrides for dark theme ── */
-.nes-container {
-  background-color: #0f3460 !important;
-  border-color: #e0e0e0 !important;
-  color: #e0e0e0 !important;
+/* Gradient shift */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.nes-container.is-dark {
-  background-color: #1a0a0a !important;
-  border-color: #ff6b6b !important;
-}
-
-.nes-container .title {
-  background-color: #16213e !important;
-  font-size: 0.8rem;
-}
-
-.nes-btn {
-  font-family: inherit !important;
-  font-size: 0.7rem !important;
-  cursor: pointer;
-}
-
-.nes-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.nes-input {
-  font-family: inherit !important;
-  font-size: 0.7rem !important;
-}
-
-.nes-progress {
-  width: 100%;
-  height: 20px;
-}
-
-/* ── Hunger critical: red flash ── */
+/* ── Hunger critical: sakura flash ────────────────────  */
 @keyframes hungerFlash {
-  0%, 100% { background-color: #0f3460; }
-  50%       { background-color: #3a0a0a; }
+  0%, 100% { background: linear-gradient(135deg, #12122a 0%, #0a0a20 100%) !important; }
+  50%       { background: linear-gradient(135deg, #330015 0%, #1a0008 100%) !important; border-color: var(--sakura) !important; box-shadow: var(--glow-sakura) !important; }
 }
 
 .hunger-critical {
-  animation: hungerFlash 0.8s infinite;
+  animation: hungerFlash 0.7s infinite !important;
 }
+
+/* ── Decorative sakura petals (background) ────────────  */
+.sakura-petal {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--sakura);
+  opacity: 0;
+  clip-path: polygon(50% 0%, 80% 30%, 100% 50%, 80% 70%, 50% 100%, 20% 70%, 0% 50%, 20% 30%);
+  animation: petalFall linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Header: anime banner ─────────────────────────────  */
+.anime-header {
+  background: linear-gradient(135deg, #0a0a1e 0%, #1a0a2e 50%, #0a0a1e 100%);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--sakura), var(--electric), var(--golden), var(--neon-purple)) 1;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Chat bubbles ─────────────────────────────────────  */
+.chat-bubble-user {
+  background: linear-gradient(135deg, #1a1a3a, #2a1a3a) !important;
+  border-color: var(--neon-purple) !important;
+  box-shadow: 0 0 6px #b44bff33;
+}
+
+.chat-bubble-monster {
+  background: linear-gradient(135deg, #0a1a2a, #0a2a1a) !important;
+  border-color: var(--electric) !important;
+  box-shadow: 0 0 6px #00d4ff33;
+}
+
+/* ── Select screen cards ──────────────────────────────  */
+.monster-card {
+  background: linear-gradient(135deg, #0d0d2a, #1a0a2a) !important;
+  border: 2px solid var(--neon-purple) !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.monster-card:hover {
+  border-color: var(--sakura) !important;
+  box-shadow: var(--glow-sakura);
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* ── Stat bars container ──────────────────────────────  */
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Decorative corners ───────────────────────────────  */
+.nes-container.with-title {
+  border-color: var(--sakura) !important;
+  box-shadow: 0 0 12px #ff6eb422, inset 0 0 20px #00000033;
+}
+
+.nes-container.with-title::after {
+  content: '✦';
+  position: absolute;
+  bottom: -8px;
+  left: 8px;
+  font-size: 0.5rem;
+  color: var(--sakura);
+  text-shadow: var(--glow-sakura);
+}
+
+/* ── Scrollbar: anime style ───────────────────────────  */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--sakura), var(--neon-purple));
+  border-radius: 3px;
+}
+
+/* ── NES list (chat messages) ─────────────────────────  */
+.nes-list.is-circle li::before,
+.nes-list.is-disc li::before {
+  color: var(--electric);
+}
+
+/* ── Tab buttons ──────────────────────────────────────  */
+.anime-tabs {
+  display: flex;
+  border: 2px solid var(--neon-purple);
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 0 8px #b44bff33;
+}
+
+.anime-tab {
+  flex: 1;
+  padding: 0.4rem;
+  font-size: 0.6rem;
+  font-family: 'Press Start 2P', monospace;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.anime-tab.active {
+  background: linear-gradient(135deg, #2a0a3a, #1a0a2e);
+  color: var(--sakura);
+  text-shadow: var(--glow-sakura);
+}
+
+.anime-tab:not(.active) {
+  background: transparent;
+  color: var(--dim);
+}
+
+.anime-tab:not(.active):hover {
+  color: var(--soft-white);
+  background: #1a1a30;
+}
+
+/* ── Evolution/training badge ─────────────────────────  */
+.training-badge {
+  font-size: 0.55rem;
+  color: var(--golden);
+  text-shadow: var(--glow-golden);
+  margin-top: 0.3rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* ── Result card score ────────────────────────────────  */
+.score-number {
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-shadow: var(--glow-golden);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* ── Footer ───────────────────────────────────────────  */
+footer {
+  border-top: 1px solid #ffffff11;
+  background: linear-gradient(90deg, #0a0a1e, #1a0a2e, #0a0a1e);
+  font-size: 0.55rem !important;
+  letter-spacing: 1px;
+}
+
+/* ── Utility ──────────────────────────────────────────  */
+.text-sakura  { color: var(--sakura) !important; text-shadow: var(--glow-sakura); }
+.text-electric { color: var(--electric) !important; text-shadow: var(--glow-electric); }
+.text-golden  { color: var(--golden) !important; text-shadow: var(--glow-golden); }
+.text-purple  { color: var(--neon-purple) !important; text-shadow: var(--glow-purple); }

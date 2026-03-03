@@ -16,24 +16,41 @@ export function SelectScreen({ onSelect }: Props) {
   const handleCreate = () => {
     if (!canCreate) return;
     const base = MONSTER_TYPES.find(m => m.id === selectedType)!;
-    // Inject the custom name into the monster
     onSelect({ ...base, name: name.trim() });
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Only allow letters (including accented), spaces limited
     const val = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]/g, '');
     if (val.length <= 15) setName(val);
   };
 
   return (
-    <div className="nes-container with-title is-centered" style={{ maxWidth: 500, margin: '0 auto' }}>
-      <p className="title" style={{ fontSize: '0.9rem' }}>🥚 Crea tu Regenmon</p>
+    <div style={{ maxWidth: 500, margin: '1rem auto', padding: '0 0.5rem' }}>
+      {/* Header */}
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+        <div style={{ fontSize: '2rem', marginBottom: '0.4rem', filter: 'drop-shadow(0 0 12px #ff6eb4)' }}>
+          🥚
+        </div>
+        <h2 style={{
+          fontSize: '0.8rem',
+          background: 'linear-gradient(90deg, #ff6eb4, #00d4ff)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          letterSpacing: '2px',
+          margin: 0,
+        }}>
+          CREA TU REGENMON
+        </h2>
+        <p style={{ fontSize: '0.5rem', color: '#7070aa', marginTop: '0.3rem', letterSpacing: '1px' }}>
+          ✦ Elige un nombre y un tipo ✦
+        </p>
+      </div>
 
       {/* Name field */}
-      <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-        <label style={{ fontSize: '0.7rem', color: '#bbb', display: 'block', marginBottom: '0.4rem' }}>
-          Nombre de tu Regenmon
+      <div className="nes-container" style={{ marginBottom: '1rem' }}>
+        <label style={{ fontSize: '0.6rem', color: '#9090cc', display: 'block', marginBottom: '0.5rem', letterSpacing: '1px' }}>
+          ✦ NOMBRE DE TU REGENMON
         </label>
         <input
           className="nes-input"
@@ -43,27 +60,25 @@ export function SelectScreen({ onSelect }: Props) {
           onChange={handleNameChange}
           maxLength={15}
           style={{
-            fontSize: '0.75rem',
-            backgroundColor: '#0a1628',
-            color: '#e0e0e0',
-            borderColor: nameValid ? '#6bcb77' : name.length > 0 ? '#ff6b6b' : '#e0e0e0',
+            borderColor: nameValid ? '#39ff14' : name.length > 0 ? '#ff6eb4' : undefined,
+            boxShadow: nameValid ? '0 0 8px #39ff1466' : name.length > 0 ? '0 0 8px #ff6eb466' : undefined,
           }}
         />
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem' }}>
-          <span style={{ fontSize: '0.6rem', color: name.length > 0 && !nameValid ? '#ff6b6b' : '#666' }}>
-            {name.length > 0 && name.trim().length < 2 ? 'Mínimo 2 letras' :
-             name.length === 15 ? 'Máximo 15 letras' : ''}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.3rem' }}>
+          <span style={{ fontSize: '0.55rem', color: name.length > 0 && !nameValid ? '#ff6eb4' : '#404060' }}>
+            {name.length > 0 && name.trim().length < 2 ? '⚠ Mínimo 2 letras' :
+             name.length === 15 ? '⚠ Máximo 15 letras' : ''}
           </span>
-          <span style={{ fontSize: '0.6rem', color: '#555' }}>{name.trim().length}/15</span>
+          <span style={{ fontSize: '0.55rem', color: '#404060' }}>{name.trim().length}/15</span>
         </div>
       </div>
 
       {/* Type selector */}
-      <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-        <label style={{ fontSize: '0.7rem', color: '#bbb', display: 'block', marginBottom: '0.75rem' }}>
-          Elige su tipo
-        </label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+      <div style={{ marginBottom: '1rem' }}>
+        <p style={{ fontSize: '0.6rem', color: '#9090cc', marginBottom: '0.5rem', letterSpacing: '1px' }}>
+          ✦ ELIGE SU TIPO
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {MONSTER_TYPES.map((m) => {
             const isSelected = selectedType === m.id;
             return (
@@ -75,29 +90,49 @@ export function SelectScreen({ onSelect }: Props) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.75rem',
-                  padding: '0.75rem 1rem',
-                  background: isSelected ? `${m.color}22` : '#0a1628',
-                  border: `2px solid ${isSelected ? m.color : '#334'}`,
+                  padding: '0.65rem 0.75rem',
+                  background: isSelected
+                    ? `linear-gradient(135deg, ${m.color}22, ${m.color}11)`
+                    : 'linear-gradient(135deg, #0d0d2a, #0a0a1e)',
+                  border: `2px solid ${isSelected ? m.color : '#2a2a4a'}`,
                   cursor: 'pointer',
                   transition: 'all 0.15s',
                   fontFamily: 'inherit',
                   textAlign: 'left',
                   width: '100%',
+                  boxShadow: isSelected ? `0 0 10px ${m.color}55, inset 0 0 10px ${m.color}11` : 'none',
                 }}
-                onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.borderColor = m.color; }}
-                onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.borderColor = '#334'; }}
               >
-                <span style={{ fontSize: '1.8rem', lineHeight: 1 }}>{m.adultEmoji}</span>
-                <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: m.color }}>
-                    {m.adultEmoji} {m.name}
+                <span style={{
+                  fontSize: '2rem',
+                  lineHeight: 1,
+                  filter: isSelected ? `drop-shadow(0 0 8px ${m.color})` : 'none',
+                }}>
+                  {m.adultEmoji}
+                </span>
+                <div style={{ flex: 1 }}>
+                  <div style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 'bold',
+                    color: m.color,
+                    textShadow: isSelected ? `0 0 8px ${m.color}` : 'none',
+                    marginBottom: '0.2rem',
+                  }}>
+                    {m.name}
                   </div>
-                  <div style={{ fontSize: '0.6rem', color: '#999', marginTop: '0.2rem' }}>
+                  <div style={{ fontSize: '0.55rem', color: '#7070aa', fontFamily: "'Noto Sans JP', sans-serif", lineHeight: 1.3 }}>
                     {m.description}
                   </div>
                 </div>
                 {isSelected && (
-                  <span style={{ marginLeft: 'auto', color: m.color, fontSize: '0.8rem' }}>✓</span>
+                  <span style={{
+                    color: m.color,
+                    fontSize: '0.9rem',
+                    textShadow: `0 0 10px ${m.color}`,
+                    marginLeft: 'auto',
+                  }}>
+                    ✦
+                  </span>
                 )}
               </button>
             );
@@ -112,10 +147,9 @@ export function SelectScreen({ onSelect }: Props) {
         disabled={!canCreate}
         style={{
           width: '100%',
-          fontSize: '0.8rem',
+          fontSize: '0.75rem',
           padding: '0.75rem',
-          opacity: canCreate ? 1 : 0.5,
-          cursor: canCreate ? 'pointer' : 'not-allowed',
+          letterSpacing: '1px',
         }}
       >
         {canCreate ? '🥚 ¡Eclosionar!' : !nameValid ? '✏️ Escribe un nombre válido' : '👆 Elige un tipo'}

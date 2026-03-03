@@ -118,7 +118,8 @@ export function GameScreen({
           <FloatingStat items={floatItems} onDone={handleFloatDone} />
           <div style={{
             fontSize: '6rem', margin: '0.75rem 0',
-            animation: isDead ? 'none' : 'bounce 1s infinite alternate',
+            animation: isDead ? 'none' : 'bounce 1s infinite alternate, glowPulse 3s ease-in-out infinite',
+            filter: isDead ? 'grayscale(1) opacity(0.5)' : undefined,
           }}>
             {getEmoji(state)}
           </div>
@@ -141,29 +142,20 @@ export function GameScreen({
           <span>{getMood(state)}</span>
         </div>
         {/* Training stage badge */}
-        <div style={{ marginTop: '0.3rem', fontSize: '0.6rem', color: '#ffd43b', textAlign: 'center' }}>
-          Nivel de Entrenamiento: <strong>{STAGE_LABELS[training.trainingStage]}</strong>
-          {' · '}<span style={{ color: '#a8e063' }}>{training.totalPoints} pts</span>
+        <div className="training-badge">
+          ✦ Nivel: <strong style={{ color: '#ffd700' }}>{STAGE_LABELS[training.trainingStage]}</strong>
+          {' · '}<span style={{ color: '#39ff14' }}>{training.totalPoints} pts</span> ✦
         </div>
       </div>
 
       {/* ── Tabs (Stats / Entrenar) — hidden while egg/dead ─────────────────── */}
       {!isDead && !isEgg && (
-        <div style={{ display: 'flex', gap: '0', marginBottom: '0.75rem', border: '2px solid #1a2a4a', borderRadius: '4px', overflow: 'hidden' }}>
+        <div className="anime-tabs">
           {(['stats', 'train'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              style={{
-                flex: 1,
-                padding: '0.4rem',
-                fontSize: '0.65rem',
-                backgroundColor: activeTab === tab ? '#1a2a4a' : 'transparent',
-                color: activeTab === tab ? '#fff' : '#666',
-                border: 'none',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-              }}
+              className={`anime-tab ${activeTab === tab ? 'active' : ''}`}
             >
               {tab === 'stats' ? '🐾 Stats' : '🎓 Entrenar'}
             </button>
