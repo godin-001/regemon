@@ -3,64 +3,95 @@ import 'nes.css/css/nes.min.css';
 import './App.css';
 import { useGame } from './hooks/useGame';
 import { useChat } from './hooks/useChat';
+import { useAuth } from './hooks/useAuth';
+import { useFruta } from './hooks/useFruta';
 import { SelectScreen } from './components/SelectScreen';
 import { GameScreen } from './components/GameScreen';
 import { ChatBox } from './components/ChatBox';
+import { Header } from './components/Header';
+import { History } from './components/History';
 
 interface FloatItem { id: string; text: string; color: string; }
 
 function App() {
+  const { ready, isLoggedIn, userName, storageKey, login, logout } = useAuth();
   const { state, chooseMonster, feed, play, sleep, chatStatEffect, reset } = useGame();
+  const { coins, history, floatEvents, spend, earnFromChat, canAfford } = useFruta(storageKey, isLoggedIn);
   const [floatItems, setFloatItems] = useState<FloatItem[]>([]);
+
+  // Merge coin floats + stat floats
+  const allFloats = [...floatItems, ...floatEvents];
 
   const handleStatEffect = useCallback((dHunger: number, dHappiness: number, dEnergy: number) => {
     chatStatEffect(dHunger, dHappiness, dEnergy);
-    // Show floating stat text for happiness gain
     if (dHappiness > 0) {
       setFloatItems(prev => [...prev, {
-        id: `f_${Date.now()}_h`,
-        text: `+${dHappiness} Felicidad ❤️`,
-        color: '#ff85a1',
+        id: `f_${Date.now()}_h`, text: `+${dHappiness} ❤️`, color: '#ff85a1',
       }]);
     }
     if (dEnergy < 0) {
       setFloatItems(prev => [...prev, {
-        id: `f_${Date.now()}_e`,
-        text: `${dEnergy} Energía ⚡`,
-        color: '#ffe66d',
+        id: `f_${Date.now()}_e`, text: `${dEnergy} ⚡`, color: '#ffe66d',
       }]);
     }
   }, [chatStatEffect]);
 
-  const { messages, memories, isTyping, sendMessage, clearChat } = useChat(state, handleStatEffect);
+  const { messages, memories, isTyping, sendMessage, clearChat } = useChat(
+    state,
+    handleStatEffect,
+    earnFromChat,
+  );
 
   const removeFloat = useCallback((id: string) => {
     setFloatItems(prev => prev.filter(f => f.id !== id));
   }, []);
 
+  const handleFeedWithCoins = useCallback(() => {
+    const ok = spend(10, '🍊 Alimentar -10');
+    if (ok) feed();
+  }, [spend, feed]);
+
+  const handleReset = useCallback(() => {
+    reset();
+    clearChat();
+  }, [reset, clearChat]);
+
+  if (!ready) {
+    return (
+      <div className="app-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <p style={{ color: '#aaa', fontSize: '0.8rem' }}>Cargando...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="app-wrapper">
-      <header style={{ textAlign: 'center', padding: '1.5rem 1rem 0.5rem' }}>
-        <h1 className="gradient-title">⚔️ REGEMON ⚔️</h1>
-        <p style={{ fontSize: '0.75rem', color: '#888', margin: 0 }}>
-          VibeCoding Bootcamp · Sesión 2
-        </p>
-      </header>
+      <Header
+        isLoggedIn={isLoggedIn}
+        userName={userName}
+        coins={coins}
+        onLogin={login}
+        onLogout={logout}
+      />
 
-      <main style={{ padding: '1rem' }}>
+      <main style={{ padding: '0.5rem 1rem 1rem' }}>
         {!state.chosen ? (
           <SelectScreen onSelect={chooseMonster} />
         ) : (
           <>
             <GameScreen
               state={state}
+              isLoggedIn={isLoggedIn}
+              canAfford={canAfford}
               onFeed={feed}
+              onFeedWithCoins={handleFeedWithCoins}
               onPlay={play}
               onSleep={sleep}
-              onReset={() => { reset(); clearChat(); }}
-              floatItems={floatItems}
+              onReset={handleReset}
+              floatItems={allFloats}
               onFloatDone={removeFloat}
             />
+
             {state.stage !== 'dead' && state.stage !== 'egg' && (
               <ChatBox
                 messages={messages}
@@ -71,11 +102,13 @@ function App() {
                 onSend={sendMessage}
               />
             )}
+
+            <History entries={history} />
           </>
         )}
       </main>
 
-      <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.65rem', color: '#aaa' }}>
+      <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.6rem', color: '#666' }}>
         Frutero Club 🍌 · {new Date().getFullYear()}
       </footer>
     </div>

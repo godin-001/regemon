@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import type { GameState } from '../types';
 import { StatBar } from './StatBar';
 import { FloatingStat } from './FloatingStat';
@@ -7,7 +7,10 @@ interface FloatItem { id: string; text: string; color: string; }
 
 interface Props {
   state: GameState;
+  isLoggedIn: boolean;
+  canAfford: (n: number) => boolean;
   onFeed: () => void;
+  onFeedWithCoins: () => void;
   onPlay: () => void;
   onSleep: () => void;
   onReset: () => void;
@@ -40,44 +43,90 @@ function getMood(state: GameState): string {
   return '😵 Crítico';
 }
 
-export function GameScreen({ state, onFeed, onPlay, onSleep, onReset, floatItems = [], onFloatDone }: Props) {
+export function GameScreen({
+  state, isLoggedIn, canAfford,
+  onFeed, onFeedWithCoins, onPlay, onSleep, onReset,
+  floatItems = [], onFloatDone
+}: Props) {
   const { monster, stage, hunger, happiness, energy, age } = state;
   const isDead = stage === 'dead';
-  const isEgg = stage === 'egg';
+  const isEgg  = stage === 'egg';
   const isCriticalHunger = hunger < 10 && !isDead;
+  const FEED_COST = 10;
 
-  const handleFloatDone = useCallback((id: string) => {
-    onFloatDone?.(id);
-  }, [onFloatDone]);
+  const [reaction, setReaction] = useState('');
+  const [processing, setProcessing] = useState(false);
+
+  const triggerReaction = useCallback((msg: string) => {
+    setReaction(msg);
+    setTimeout(() => setReaction(''), 2500);
+  }, []);
+
+  const handleFeedCoins = async () => {
+    if (processing) return;
+    if (!isLoggedIn) { triggerReaction('🔑 ¡Inicia sesión para usar monedas!'); return; }
+    if (!canAfford(FEED_COST)) { triggerReaction(`¡Necesitas ${FEED_COST} 🍊!`); return; }
+    if (hunger >= 98) { triggerReaction('¡Ya estoy lleno! No necesito comer más 😅'); return; }
+    setProcessing(true);
+    triggerReaction('⏳ Procesando...');
+    await new Promise(r => setTimeout(r, 600));
+    onFeedWithCoins();
+    triggerReaction('🍊 ¡Ñam ñam! ¡Gracias por la comida! 😋');
+    setProcessing(false);
+  };
+
+  const handlePlay = () => {
+    if (processing) return;
+    onPlay();
+    triggerReaction('🎮 ¡Weee! ¡Juguemos! 🎉');
+  };
+
+  const handleSleep = () => {
+    if (processing) return;
+    onSleep();
+    triggerReaction('💤 Zzz... qué rico descanso...');
+  };
+
+  const handleFeed = () => {
+    if (processing) return;
+    onFeed();
+    triggerReaction('🍖 ¡Mmmm! ¡Qué rico!');
+  };
+
+  const handleFloatDone = useCallback((id: string) => onFloatDone?.(id), [onFloatDone]);
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto' }}>
-      {/* Header */}
+      {/* Pet card */}
       <div
         className={`nes-container with-title is-centered ${isCriticalHunger ? 'hunger-critical' : ''}`}
-        style={{
-          marginBottom: '1rem',
-          borderColor: isCriticalHunger ? '#ff3333 !important' : undefined,
-        }}
+        style={{ marginBottom: '1rem' }}
       >
         <p className="title" style={{ color: isCriticalHunger ? '#ff3333' : monster?.color }}>
           {isCriticalHunger ? '🔥 ' : ''}{monster?.name ?? 'REGEMON'}{isCriticalHunger ? ' 🔥' : ''}
         </p>
 
-        {/* Pet display + floating stats */}
+        {/* Pet + floats */}
         <div style={{ position: 'relative' }}>
           <FloatingStat items={floatItems} onDone={handleFloatDone} />
-          <div
-            style={{
-              fontSize: '6rem',
-              margin: '1rem 0',
-              animation: isDead ? 'none' : 'bounce 1s infinite alternate',
-              filter: isCriticalHunger ? 'hue-rotate(0deg) saturate(3)' : 'none',
-            }}
-          >
+          <div style={{
+            fontSize: '6rem', margin: '0.75rem 0',
+            animation: isDead ? 'none' : 'bounce 1s infinite alternate',
+          }}>
             {getEmoji(state)}
           </div>
         </div>
+
+        {/* Reaction bubble */}
+        {reaction && (
+          <div className="nes-container" style={{
+            fontSize: '0.65rem', color: '#fff', margin: '0.25rem 0',
+            padding: '0.4rem 0.6rem', backgroundColor: '#1a2a4a',
+            animation: 'msgIn 0.2s ease-out',
+          }}>
+            {reaction}
+          </div>
+        )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#aaa' }}>
           <span>Etapa: <strong>{getStageName(stage)}</strong></span>
@@ -104,14 +153,33 @@ export function GameScreen({ state, onFeed, onPlay, onSleep, onReset, floatItems
 
       {/* Actions */}
       {!isDead && !isEgg && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
-          <button className="nes-btn is-success" onClick={onFeed}>🍖 Comer</button>
-          <button className="nes-btn is-primary" onClick={onPlay}>🎮 Jugar</button>
-          <button className="nes-btn is-warning" onClick={onSleep}>💤 Dormir</button>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+          {/* Feed with coins (primary) */}
+          <button
+            className={`nes-btn ${canAfford(FEED_COST) ? 'is-success' : 'is-disabled'}`}
+            onClick={handleFeedCoins}
+            disabled={processing}
+            style={{ fontSize: '0.6rem', position: 'relative' }}
+            title={!isLoggedIn ? 'Inicia sesión' : !canAfford(FEED_COST) ? `Necesitas ${FEED_COST} 🍊` : 'Alimentar'}
+          >
+            🍊 Alimentar ({FEED_COST}🍊)
+          </button>
+
+          {/* Free feed (fallback) */}
+          <button className="nes-btn" onClick={handleFeed} disabled={processing} style={{ fontSize: '0.6rem' }}>
+            🍖 Comer (gratis)
+          </button>
+
+          <button className="nes-btn is-primary" onClick={handlePlay} disabled={processing} style={{ fontSize: '0.6rem' }}>
+            🎮 Jugar
+          </button>
+          <button className="nes-btn is-warning" onClick={handleSleep} disabled={processing} style={{ fontSize: '0.6rem' }}>
+            💤 Dormir
+          </button>
         </div>
       )}
 
-      {/* Dead screen */}
+      {/* Dead */}
       {isDead && (
         <div className="nes-container is-centered is-dark" style={{ marginBottom: '1rem' }}>
           <p>Tu Regemon no sobrevivió 😢</p>
@@ -119,7 +187,6 @@ export function GameScreen({ state, onFeed, onPlay, onSleep, onReset, floatItems
         </div>
       )}
 
-      {/* Reset */}
       <div style={{ textAlign: 'center' }}>
         <button className="nes-btn is-error" style={{ fontSize: '0.7rem' }} onClick={onReset}>
           🔄 Nuevo Regemon

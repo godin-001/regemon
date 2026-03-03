@@ -97,7 +97,11 @@ ${moodContext}${memoryContext}
 Responde siempre en carácter, como la mascota que eres.`;
 }
 
-export function useChat(state: GameState, onStatEffect: (dHunger: number, dHappiness: number, dEnergy: number) => void) {
+export function useChat(
+  state: GameState,
+  onStatEffect: (dHunger: number, dHappiness: number, dEnergy: number) => void,
+  onEarnCoins?: () => void
+) {
   const [messages, setMessages] = useState<ChatMessage[]>(loadMessages);
   const [memories, setMemories] = useState<Memory[]>(loadMemories);
   const [isTyping, setIsTyping] = useState(false);
@@ -179,6 +183,8 @@ export function useChat(state: GameState, onStatEffect: (dHunger: number, dHappi
       const withReply = [...newMessages, assistantMsg].slice(-MAX_MESSAGES);
       setMessages(withReply);
       saveMessages(withReply);
+      // Earn coins on successful chat exchange
+      onEarnCoins?.();
     } catch {
       // Always fallback to mock AI, never show error to user
       const fallback = generateMockResponse(text.trim(), newMessages, state, updatedMemories);
