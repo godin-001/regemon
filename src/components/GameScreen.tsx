@@ -3,8 +3,7 @@ import type { GameState, TrainingState, TrainingCategory, EvaluateResult } from 
 import { StatBar } from './StatBar';
 import { FloatingStat } from './FloatingStat';
 import { TrainingScreen } from './TrainingScreen';
-import { PixelSprite } from './PixelSprite';
-import { getSprite } from '../sprites/pixelArt';
+import { MonsterSprite } from '../sprites/MonsterSprite';
 import { STAGE_LABELS } from '../hooks/useTraining';
 
 interface FloatItem { id: string; text: string; color: string; }
@@ -25,11 +24,6 @@ interface Props {
   onFloatDone?: (id: string) => void;
 }
 
-function getFallbackEmoji(state: GameState): string {
-  if (state.hunger < 10 && state.stage !== 'dead') return '😡🔥';
-  if (state.stage === 'dead') return '💀';
-  return '';
-}
 
 function getStageName(stage: string): string {
   const names: Record<string, string> = {
@@ -116,23 +110,18 @@ export function GameScreen({
         <div style={{ position: 'relative' }}>
           <FloatingStat items={floatItems} onDone={handleFloatDone} />
           {/* ── Pixel Art Sprite ─── */}
-          {isDead || isCriticalHunger ? (
-            <div style={{ fontSize: '5rem', margin: '0.75rem 0' }}>
-              {getFallbackEmoji(state)}
-            </div>
-          ) : (
-            <div style={{
-              margin: '0.75rem auto',
-              animation: 'bounce 1s infinite alternate, glowPulse 3s ease-in-out infinite',
-              display: 'inline-block',
-            }}>
-              <PixelSprite
-                grid={getSprite(monster?.id ?? 'pikumon', stage)}
-                scale={3}
-                style={{ imageRendering: 'pixelated' }}
-              />
-            </div>
-          )}
+          <div style={{
+            margin: '0.5rem auto',
+            animation: isDead ? 'none' : 'bounce 1.4s ease-in-out infinite alternate, glowPulse 3s ease-in-out infinite',
+            display: 'inline-block',
+            filter: isDead ? 'grayscale(1) brightness(0.6)' : isCriticalHunger ? 'drop-shadow(0 0 12px #ff4444)' : undefined,
+          }}>
+            <MonsterSprite
+              monsterId={monster?.id ?? 'pikumon'}
+              stage={isDead ? 'dead' : stage}
+              size={180}
+            />
+          </div>
         </div>
 
         {/* Reaction bubble */}

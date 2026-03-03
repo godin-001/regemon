@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import type { Monster } from '../types';
 import { MONSTER_TYPES } from '../data/monsters';
-import { PixelSprite } from './PixelSprite';
-import { getSprite } from '../sprites/pixelArt';
+import { MonsterSprite } from '../sprites/MonsterSprite';
 
 interface Props {
   onSelect: (monster: Monster) => void;
@@ -106,12 +105,14 @@ export function SelectScreen({ onSelect }: Props) {
                 }}
               >
                 <div style={{
-                  filter: isSelected ? `drop-shadow(0 0 10px ${m.color})` : 'none',
+                  filter: isSelected ? `drop-shadow(0 0 12px ${m.color})` : 'none',
                   flexShrink: 0,
+                  transition: 'filter 0.2s',
                 }}>
-                  <PixelSprite
-                    grid={getSprite(m.id, 'adult')}
-                    scale={1}
+                  <MonsterSprite
+                    monsterId={m.id}
+                    stage="adult"
+                    size={72}
                   />
                 </div>
                 <div style={{ flex: 1 }}>
