@@ -34,3 +34,30 @@ export interface Memory {
   value: string;
   savedAt: number;
 }
+
+// ─── Training System ────────────────────────────────────────────────────────
+export type TrainingCategory = 'codigo' | 'diseno' | 'proyecto' | 'aprendizaje';
+
+export interface TrainingEntry {
+  score: number;
+  category: TrainingCategory;
+  timestamp: number;
+}
+
+export interface TrainingState {
+  totalPoints: number;
+  trainingStage: 1 | 2 | 3;
+  trainingHistory: TrainingEntry[];
+}
+
+export interface EvaluateResult {
+  score: number;
+  feedback: string;
+  points: number;
+  tokens: number;
+  dHunger: number;
+  dHappiness: number;
+  dEnergy: number;
+  didEvolve: boolean;
+  newStage: 1 | 2 | 3;
+}

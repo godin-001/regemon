@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
-import type { GameState } from '../types';
+import type { GameState, TrainingState, TrainingCategory, EvaluateResult } from '../types';
 import { StatBar } from './StatBar';
 import { FloatingStat } from './FloatingStat';
+import { TrainingScreen } from './TrainingScreen';
+import { STAGE_LABELS } from '../hooks/useTraining';
 
 interface FloatItem { id: string; text: string; color: string; }
 
@@ -9,6 +11,9 @@ interface Props {
   state: GameState;
   isLoggedIn: boolean;
   canAfford: (n: number) => boolean;
+  training: TrainingState;
+  isEvaluating: boolean;
+  onEvaluate: (imageBase64: string, category: TrainingCategory) => Promise<EvaluateResult>;
   onFeed: () => void;
   onFeedWithCoins: () => void;
   onPlay: () => void;
@@ -45,6 +50,7 @@ function getMood(state: GameState): string {
 
 export function GameScreen({
   state, isLoggedIn, canAfford,
+  training, isEvaluating, onEvaluate,
   onFeed, onFeedWithCoins, onPlay, onSleep, onReset,
   floatItems = [], onFloatDone
 }: Props) {
@@ -54,6 +60,7 @@ export function GameScreen({
   const isCriticalHunger = hunger < 10 && !isDead;
   const FEED_COST = 10;
 
+  const [activeTab, setActiveTab] = useState<'stats' | 'train'>('stats');
   const [reaction, setReaction] = useState('');
   const [processing, setProcessing] = useState(false);
 
@@ -133,49 +140,88 @@ export function GameScreen({
           <span>Edad: <strong>{Math.floor(age / 60)}m {age % 60}s</strong></span>
           <span>{getMood(state)}</span>
         </div>
+        {/* Training stage badge */}
+        <div style={{ marginTop: '0.3rem', fontSize: '0.6rem', color: '#ffd43b', textAlign: 'center' }}>
+          Nivel de Entrenamiento: <strong>{STAGE_LABELS[training.trainingStage]}</strong>
+          {' · '}<span style={{ color: '#a8e063' }}>{training.totalPoints} pts</span>
+        </div>
       </div>
 
-      {/* Stats */}
+      {/* ── Tabs (Stats / Entrenar) — hidden while egg/dead ─────────────────── */}
       {!isDead && !isEgg && (
-        <div className="nes-container" style={{ marginBottom: '1rem' }}>
-          <StatBar label="Hambre" icon="🍖" value={hunger} nesClass="is-error" />
-          <StatBar label="Felicidad" icon="❤️" value={happiness} nesClass="is-primary" />
-          <StatBar label="Energía" icon="⚡" value={energy} nesClass="is-warning" />
+        <div style={{ display: 'flex', gap: '0', marginBottom: '0.75rem', border: '2px solid #1a2a4a', borderRadius: '4px', overflow: 'hidden' }}>
+          {(['stats', 'train'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                flex: 1,
+                padding: '0.4rem',
+                fontSize: '0.65rem',
+                backgroundColor: activeTab === tab ? '#1a2a4a' : 'transparent',
+                color: activeTab === tab ? '#fff' : '#666',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              {tab === 'stats' ? '🐾 Stats' : '🎓 Entrenar'}
+            </button>
+          ))}
         </div>
       )}
 
+      {/* ── Stats tab ────────────────────────────────────────────────────────── */}
+      {!isDead && !isEgg && activeTab === 'stats' && (
+        <>
+          <div className="nes-container" style={{ marginBottom: '1rem' }}>
+            <StatBar label="Hambre" icon="🍖" value={hunger} nesClass="is-error" />
+            <StatBar label="Felicidad" icon="❤️" value={happiness} nesClass="is-primary" />
+            <StatBar label="Energía" icon="⚡" value={energy} nesClass="is-warning" />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            {/* Feed with coins (primary) */}
+            <button
+              className={`nes-btn ${canAfford(FEED_COST) ? 'is-success' : 'is-disabled'}`}
+              onClick={handleFeedCoins}
+              disabled={processing}
+              style={{ fontSize: '0.6rem', position: 'relative' }}
+              title={!isLoggedIn ? 'Inicia sesión' : !canAfford(FEED_COST) ? `Necesitas ${FEED_COST} 🍊` : 'Alimentar'}
+            >
+              🍊 Alimentar ({FEED_COST}🍊)
+            </button>
+
+            {/* Free feed (fallback) */}
+            <button className="nes-btn" onClick={handleFeed} disabled={processing} style={{ fontSize: '0.6rem' }}>
+              🍖 Comer (gratis)
+            </button>
+
+            <button className="nes-btn is-primary" onClick={handlePlay} disabled={processing} style={{ fontSize: '0.6rem' }}>
+              🎮 Jugar
+            </button>
+            <button className="nes-btn is-warning" onClick={handleSleep} disabled={processing} style={{ fontSize: '0.6rem' }}>
+              💤 Dormir
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* ── Train tab ────────────────────────────────────────────────────────── */}
+      {!isDead && !isEgg && activeTab === 'train' && (
+        <TrainingScreen
+          monsterName={monster?.name ?? 'Regemon'}
+          training={training}
+          isEvaluating={isEvaluating}
+          onEvaluate={onEvaluate}
+        />
+      )}
+
+      {/* Egg */}
       {isEgg && (
         <div className="nes-container is-centered" style={{ marginBottom: '1rem' }}>
           <p>⏳ Tu huevo está incubando...</p>
           <p style={{ fontSize: '0.75rem', color: '#aaa' }}>Nacerá pronto 🐣</p>
-        </div>
-      )}
-
-      {/* Actions */}
-      {!isDead && !isEgg && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
-          {/* Feed with coins (primary) */}
-          <button
-            className={`nes-btn ${canAfford(FEED_COST) ? 'is-success' : 'is-disabled'}`}
-            onClick={handleFeedCoins}
-            disabled={processing}
-            style={{ fontSize: '0.6rem', position: 'relative' }}
-            title={!isLoggedIn ? 'Inicia sesión' : !canAfford(FEED_COST) ? `Necesitas ${FEED_COST} 🍊` : 'Alimentar'}
-          >
-            🍊 Alimentar ({FEED_COST}🍊)
-          </button>
-
-          {/* Free feed (fallback) */}
-          <button className="nes-btn" onClick={handleFeed} disabled={processing} style={{ fontSize: '0.6rem' }}>
-            🍖 Comer (gratis)
-          </button>
-
-          <button className="nes-btn is-primary" onClick={handlePlay} disabled={processing} style={{ fontSize: '0.6rem' }}>
-            🎮 Jugar
-          </button>
-          <button className="nes-btn is-warning" onClick={handleSleep} disabled={processing} style={{ fontSize: '0.6rem' }}>
-            💤 Dormir
-          </button>
         </div>
       )}
 

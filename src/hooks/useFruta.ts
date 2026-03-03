@@ -105,6 +105,21 @@ export function useFruta(storageKey: string, isLoggedIn: boolean) {
     return earned;
   }, [coins, isLoggedIn, addHistory, emitFloat]);
 
+  // Earn coins directly (training rewards, bonuses) — hard cap 300, no diminishing returns
+  const earnDirect = useCallback((amount: number, actionLabel: string) => {
+    if (amount <= 0) return;
+    setCoins(prev => {
+      if (prev >= 300) return prev;
+      const next = Math.min(300, prev + amount);
+      const actual = next - prev;
+      if (actual > 0) {
+        addHistory(actionLabel, actual);
+        emitFloat(`+${actual} 🍊`, '#ffd700');
+      }
+      return next;
+    });
+  }, [addHistory, emitFloat]);
+
   // Can user afford something?
   const canAfford = useCallback((amount: number) => isLoggedIn && coins >= amount, [coins, isLoggedIn]);
 
@@ -114,6 +129,7 @@ export function useFruta(storageKey: string, isLoggedIn: boolean) {
     floatEvents,
     spend,
     earnFromChat,
+    earnDirect,
     canAfford,
   };
 }
