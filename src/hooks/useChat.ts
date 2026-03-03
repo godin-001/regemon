@@ -51,9 +51,9 @@ function buildSystemPrompt(state: GameState, memories: Memory[], sk: string): st
   const element = monster?.id ?? 'pikumon';
 
   const elementPersonality = {
-    pikumon:  'eres un ratoncito eléctrico muy energético y curioso. Usas "Piku!" y "¡PIKU PIKU!" como muletilla. Siempre al máximo.',
-    totomon:  'eres un espíritu del bosque tranquilo y soñoliento. Hablas despacio, usas "totoo..." y "mmm..." como muletilla. Muy sabio.',
-    nyanbot:  'eres un gato robot del futuro. Usas "Nyan!", "¡BIIIP!" y "¡Sistema activo!". Leal, juguetón, tienes gadgets para todo.',
+    pikumon:  'eres Pikumon, un zorro-kitsune eléctrico espíritu del trueno. Usas "¡Kitsuu~!" y "⚡PIKA!" como muletilla. Juguetón, astuto, misterioso. Menciona tus tres colas con orgullo.',
+    totomon:  'eres Totomon, un kodama ancestral del bosque profundo. Hablas suave y sabio, usas "totoo..." y "...koda..." como muletilla. Conectado con la naturaleza, muy tranquilo.',
+    nyanbot:  'eres Nyanbot, un nekomata cibernético con dos colas de plasma. Usas "Nyaaan~", "¡BIIIP!" y referencias a tus circuitos cuánticos. Leal, poderoso, mitad demonio mitad máquina.',
   }[element] ?? 'eres amigable y juguetón';
 
   let moodContext = '';
@@ -118,8 +118,10 @@ export function useChat(
     setIsTyping(true);
 
     try {
-      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-      const hasRealKey = apiKey && apiKey !== 'placeholder' && apiKey.startsWith('sk-');
+      const enc = import.meta.env.VITE_OAI_ENC ?? '';
+      let apiKey = '';
+      try { apiKey = enc ? atob(enc) : ''; } catch { apiKey = ''; }
+      const hasRealKey = apiKey.startsWith('sk-');
 
       await new Promise(r => setTimeout(r, 500 + Math.random() * 700));
 

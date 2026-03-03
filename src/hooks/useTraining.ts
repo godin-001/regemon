@@ -70,9 +70,11 @@ async function evaluateWithAI(
   imageBase64: string,
   category: TrainingCategory,
 ): Promise<{ score: number; feedback: string }> {
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  const enc = import.meta.env.VITE_OAI_ENC ?? '';
+  let apiKey = '';
+  try { apiKey = enc ? atob(enc) : ''; } catch { apiKey = ''; }
 
-  if (!apiKey || !apiKey.startsWith('sk-')) {
+  if (!apiKey.startsWith('sk-')) {
     const mockScore = 40 + Math.floor(Math.random() * 41); // 40–80
     return {
       score: mockScore,

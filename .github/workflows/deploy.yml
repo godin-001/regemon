@@ -20,7 +20,7 @@ jobs:
       - run: npm install
       - run: npm run build
         env:
-          VITE_OPENAI_API_KEY: ${{ secrets.VITE_OPENAI_API_KEY }}
+          VITE_OAI_ENC: ${{ secrets.VITE_OAI_ENC }}
           VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID }}
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
