@@ -3,61 +3,49 @@ import type { GameState, Monster, LifeStage } from '../types';
 
 // Cada tipo tiene su propio perfil de decay y valores iniciales
 const ELEMENT_PROFILES = {
-  fire: {
-    // Ignimon: se muere de hambre rápido, pero tiene energía natural de sobra
-    hungerDecay: 3.5,    // ⬆ muy rápido — necesita comer seguido
-    happinessDecay: 1.5, // medio — necesita estimulación
-    energyDecay: 0.8,    // ⬇ lento — es naturalmente energético
-    initialHunger: 90,
-    initialHappiness: 70,
-    initialEnergy: 95,
-    feedBonus: 30,       // le encanta comer
-    playBonus: 25,
-    sleepBonus: 35,
+  semilla: {
+    // Semilla: equilibrada, hambre moderada, muy estable
+    hungerDecay: 2.0,
+    happinessDecay: 0.8,  // felicidad duradera
+    energyDecay: 1.5,
+    initialHunger: 85,
+    initialHappiness: 80,
+    initialEnergy: 75,
+    feedBonus: 25,
+    playBonus: 20,
+    sleepBonus: 50,       // descansa muy bien
   },
-  water: {
-    // Aquamon: metabolismo lento pero necesita compañía
-    hungerDecay: 1.2,    // ⬇ lento — metabolismo eficiente
-    happinessDecay: 2.5, // ⬆ rápido — necesita interacción social
-    energyDecay: 1.5,    // medio
+  gota: {
+    // Gota: metabolismo lento, necesita mucha atención emocional
+    hungerDecay: 1.2,
+    happinessDecay: 2.8,  // se pone triste rápido
+    energyDecay: 1.5,
     initialHunger: 75,
     initialHappiness: 90,
     initialEnergy: 80,
     feedBonus: 20,
-    playBonus: 35,       // jugar lo hace muy feliz
+    playBonus: 38,        // jugar la hace muy feliz
     sleepBonus: 45,
   },
-  earth: {
-    // Terramon: equilibrado pero le cuesta recuperar energía
-    hungerDecay: 2.0,    // medio
-    happinessDecay: 0.7, // ⬇ muy lento — es tranquilo y estable
-    energyDecay: 2.2,    // ⬆ medio-alto — le cuesta moverse
-    initialHunger: 85,
-    initialHappiness: 80,
-    initialEnergy: 65,   // empieza con poca energía
-    feedBonus: 25,
-    playBonus: 20,
-    sleepBonus: 55,      // duerme muy bien
-  },
-  air: {
-    // Ventomon: siempre moviéndose — se queda sin energía rápido
-    hungerDecay: 1.8,    // medio
-    happinessDecay: 0.6, // ⬇ muy lento — espíritu libre
-    energyDecay: 3.2,    // ⬆⬆ muy rápido — siempre activo
+  chispa: {
+    // Chispa: energía se va rapidísimo, pero brilla mucho
+    hungerDecay: 2.2,
+    happinessDecay: 0.7,
+    energyDecay: 3.5,     // se agota veloz
     initialHunger: 80,
     initialHappiness: 85,
-    initialEnergy: 95,   // empieza lleno pero se va rápido
-    feedBonus: 22,
+    initialEnergy: 95,    // arranca con pila llena
+    feedBonus: 28,
     playBonus: 30,
-    sleepBonus: 40,
+    sleepBonus: 42,
   },
 } as const;
 
 type ElementProfile = typeof ELEMENT_PROFILES[keyof typeof ELEMENT_PROFILES];
 
 function getProfile(monster: Monster | null): ElementProfile {
-  if (!monster) return ELEMENT_PROFILES.fire;
-  return ELEMENT_PROFILES[monster.id] ?? ELEMENT_PROFILES.fire;
+  if (!monster) return ELEMENT_PROFILES.semilla;
+  return ELEMENT_PROFILES[monster.id as keyof typeof ELEMENT_PROFILES] ?? ELEMENT_PROFILES.semilla;
 }
 
 const INITIAL_STATE: GameState = {

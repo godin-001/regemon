@@ -1,40 +1,35 @@
 import type { Monster } from '../types';
 
-export const MONSTERS: Monster[] = [
+export const MONSTER_TYPES: Monster[] = [
   {
-    id: 'fire',
-    name: 'Ignimon',
-    emoji: '🥚',
-    babyEmoji: '🔥',
-    adultEmoji: '🐲',
-    color: '#ff6b35',
-    description: 'Feroz y apasionado. Ama la comida picante y bailar.',
-  },
-  {
-    id: 'water',
-    name: 'Aquamon',
-    emoji: '🥚',
-    babyEmoji: '💧',
-    adultEmoji: '🐳',
-    color: '#4ecdc4',
-    description: 'Tranquilo y sabio. Le encanta nadar y meditar.',
-  },
-  {
-    id: 'earth',
-    name: 'Terramon',
+    id: 'semilla',
+    name: 'Semilla',
     emoji: '🥚',
     babyEmoji: '🌱',
-    adultEmoji: '🐢',
-    color: '#a8e063',
-    description: 'Fuerte y leal. Disfruta cavar y comer frutas.',
+    adultEmoji: '🌿',
+    color: '#6bcb77',
+    description: 'Tranquilo y resistente. Crece despacio pero con fuerza.',
   },
   {
-    id: 'air',
-    name: 'Ventomon',
+    id: 'gota',
+    name: 'Gota',
     emoji: '🥚',
-    babyEmoji: '💨',
-    adultEmoji: '🦅',
-    color: '#a29bfe',
-    description: 'Libre y curioso. Adora volar y explorar nubes.',
+    babyEmoji: '💧',
+    adultEmoji: '🌊',
+    color: '#4d96ff',
+    description: 'Fluido y adaptable. Necesita mucha atención y cariño.',
+  },
+  {
+    id: 'chispa',
+    name: 'Chispa',
+    emoji: '🥚',
+    babyEmoji: '✨',
+    adultEmoji: '⚡',
+    color: '#ffd166',
+    description: 'Energético y brillante. Se agota rápido pero brilla fuerte.',
   },
 ];
+
+export function getMonsterType(id: string): Monster {
+  return MONSTER_TYPES.find(m => m.id === id) ?? MONSTER_TYPES[0];
+}

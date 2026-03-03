@@ -1,66 +1,125 @@
+import { useState } from 'react';
 import type { Monster } from '../types';
-import { MONSTERS } from '../data/monsters';
+import { MONSTER_TYPES } from '../data/monsters';
 
 interface Props {
   onSelect: (monster: Monster) => void;
 }
 
-const PROFILES_HINT = {
-  fire:  { hunger: '🔥🔥🔥', happiness: '⭐⭐', energy: '⚡' },
-  water: { hunger: '🔥',     happiness: '⭐⭐⭐', energy: '⚡⚡' },
-  earth: { hunger: '🔥🔥',   happiness: '⭐',    energy: '⚡⚡⚡' },
-  air:   { hunger: '🔥🔥',   happiness: '⭐',    energy: '⚡⚡⚡' },
-};
-
-const PROFILE_DESC = {
-  fire:  'Hambre veloz · Energía duradera',
-  water: 'Necesita compañía · Metabolismo lento',
-  earth: 'Tranquilo · Le cuesta recuperar energía',
-  air:   'Espíritu libre · Se agota rápido',
-};
-
 export function SelectScreen({ onSelect }: Props) {
+  const [name, setName] = useState('');
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+
+  const nameValid = name.trim().length >= 2 && name.trim().length <= 15;
+  const canCreate = nameValid && selectedType !== null;
+
+  const handleCreate = () => {
+    if (!canCreate) return;
+    const base = MONSTER_TYPES.find(m => m.id === selectedType)!;
+    // Inject the custom name into the monster
+    onSelect({ ...base, name: name.trim() });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow letters (including accented), spaces limited
+    const val = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]/g, '');
+    if (val.length <= 15) setName(val);
+  };
+
   return (
-    <div className="nes-container with-title is-centered" style={{ maxWidth: 600, margin: '0 auto' }}>
-      <p className="title">🥚 ELIGE TU REGEMON</p>
-      <p style={{ marginBottom: '0.5rem', color: '#bbb', fontSize: '0.7rem' }}>
-        Cada uno tiene stats y personalidad únicos
-      </p>
-      <div style={{ fontSize: '0.55rem', color: '#888', marginBottom: '1.5rem' }}>
-        🔥 = hambre decay &nbsp;⭐ = felicidad decay &nbsp;⚡ = energía decay &nbsp;(más = más rápido)
+    <div className="nes-container with-title is-centered" style={{ maxWidth: 500, margin: '0 auto' }}>
+      <p className="title" style={{ fontSize: '0.9rem' }}>🥚 Crea tu Regenmon</p>
+
+      {/* Name field */}
+      <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+        <label style={{ fontSize: '0.7rem', color: '#bbb', display: 'block', marginBottom: '0.4rem' }}>
+          Nombre de tu Regenmon
+        </label>
+        <input
+          className="nes-input"
+          type="text"
+          placeholder="Ej: Pepito, Luna..."
+          value={name}
+          onChange={handleNameChange}
+          maxLength={15}
+          style={{
+            fontSize: '0.75rem',
+            backgroundColor: '#0a1628',
+            color: '#e0e0e0',
+            borderColor: nameValid ? '#6bcb77' : name.length > 0 ? '#ff6b6b' : '#e0e0e0',
+          }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem' }}>
+          <span style={{ fontSize: '0.6rem', color: name.length > 0 && !nameValid ? '#ff6b6b' : '#666' }}>
+            {name.length > 0 && name.trim().length < 2 ? 'Mínimo 2 letras' :
+             name.length === 15 ? 'Máximo 15 letras' : ''}
+          </span>
+          <span style={{ fontSize: '0.6rem', color: '#555' }}>{name.trim().length}/15</span>
+        </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-        {MONSTERS.map((m) => {
-          const hint = PROFILES_HINT[m.id];
-          const desc = PROFILE_DESC[m.id];
-          return (
-            <div
-              key={m.id}
-              className="nes-container"
-              style={{
-                cursor: 'pointer',
-                borderColor: m.color,
-                transition: 'transform 0.1s',
-                padding: '1rem',
-              }}
-              onClick={() => onSelect(m)}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.transform = 'scale(1.04)')}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = 'scale(1)')}
-            >
-              <p style={{ fontSize: '3rem', margin: 0 }}>{m.adultEmoji}</p>
-              <p style={{ fontWeight: 'bold', margin: '0.5rem 0 0.25rem', color: m.color }}>
-                {m.name}
-              </p>
-              <p style={{ fontSize: '0.6rem', color: '#999', margin: '0 0 0.5rem' }}>{desc}</p>
-              <div style={{ fontSize: '0.6rem', color: '#aaa', lineHeight: '1.8' }}>
-                <div>🍖 {hint.hunger}</div>
-                <div>❤️ {hint.happiness}</div>
-                <div>⚡ {hint.energy}</div>
-              </div>
-            </div>
-          );
-        })}
+
+      {/* Type selector */}
+      <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+        <label style={{ fontSize: '0.7rem', color: '#bbb', display: 'block', marginBottom: '0.75rem' }}>
+          Elige su tipo
+        </label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+          {MONSTER_TYPES.map((m) => {
+            const isSelected = selectedType === m.id;
+            return (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => setSelectedType(m.id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.75rem 1rem',
+                  background: isSelected ? `${m.color}22` : '#0a1628',
+                  border: `2px solid ${isSelected ? m.color : '#334'}`,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                  fontFamily: 'inherit',
+                  textAlign: 'left',
+                  width: '100%',
+                }}
+                onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.borderColor = m.color; }}
+                onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.borderColor = '#334'; }}
+              >
+                <span style={{ fontSize: '1.8rem', lineHeight: 1 }}>{m.adultEmoji}</span>
+                <div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: m.color }}>
+                    {m.adultEmoji} {m.name}
+                  </div>
+                  <div style={{ fontSize: '0.6rem', color: '#999', marginTop: '0.2rem' }}>
+                    {m.description}
+                  </div>
+                </div>
+                {isSelected && (
+                  <span style={{ marginLeft: 'auto', color: m.color, fontSize: '0.8rem' }}>✓</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Eclosionar button */}
+      <button
+        className={`nes-btn ${canCreate ? 'is-success' : 'is-disabled'}`}
+        onClick={handleCreate}
+        disabled={!canCreate}
+        style={{
+          width: '100%',
+          fontSize: '0.8rem',
+          padding: '0.75rem',
+          opacity: canCreate ? 1 : 0.5,
+          cursor: canCreate ? 'pointer' : 'not-allowed',
+        }}
+      >
+        {canCreate ? '🥚 ¡Eclosionar!' : !nameValid ? '✏️ Escribe un nombre válido' : '👆 Elige un tipo'}
+      </button>
     </div>
   );
 }

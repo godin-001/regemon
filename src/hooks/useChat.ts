@@ -63,14 +63,13 @@ function extractMemories(text: string, existing: Memory[]): Memory[] {
 
 function buildSystemPrompt(state: GameState, memories: Memory[]): string {
   const { monster, hunger, happiness, energy } = state;
-  const name = monster?.name ?? 'Regemon';
-  const element = monster?.id ?? 'fire';
+  const name = monster?.name ?? 'Regenmon';
+  const element = monster?.id ?? 'semilla';
 
   const elementPersonality = {
-    fire: 'eres apasionado, intenso y muy expresivo. Te encanta la acción.',
-    water: 'eres tranquilo, sabio y reflexivo. Hablas con calma.',
-    earth: 'eres leal, protector y directo. Amas la naturaleza.',
-    air: 'eres curioso, libre y aventurero. Siempre quieres explorar.',
+    semilla: 'eres tranquilo, resistente y cariñoso. Te encanta crecer y cuidar a los demás.',
+    gota:    'eres fluido, empático y muy sensible. Necesitas mucho afecto y conexión.',
+    chispa:  'eres energético, brillante y entusiasta. Siempre al máximo, nunca te detienes.',
   }[element] ?? 'eres amigable y juguetón';
 
   let moodContext = '';

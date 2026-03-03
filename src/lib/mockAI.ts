@@ -1,64 +1,51 @@
 import type { GameState, ChatMessage } from '../types';
 
-// Respuestas base por tipo de monster
 const PERSONALITIES = {
-  fire: {
-    greet: ['¡OYE! ¡Por fin me hablas! 🔥', '¡HOLA! ¡Estaba esperándote! 🔥💪', '¡Por fin apareceeeees! 😤🔥'],
-    happy: ['¡WOOOOO! ¡Soy el mejor! 🔥🎉', '¡Me siento increíble hoy! ¡FUEGO! 💥', '¡Nada me detiene! ¡Soy imparable! 🔥'],
-    sad: ['...no me siento tan bien 😞', 'Hoy no tengo mucha energía 💔', 'Estoy un poco bajoneado...'],
-    hungry: ['Oye... tengo MUCHA hambre 😤🍖', 'Necesito comer YA. No es broma. 😡', '¡COMIDAAAAA! ¡Me muero! 🔥😡'],
-    critical: ['¡ESTOY MURIENDO DE HAMBRE INÚTIL! 😡🔥🔥', '¡¡¡DAME COMIDA AHORA MISMO!!!💀🔥', '¡Me traicionaste! ¡TENGO HAMBRE! ¡AAAARGH! 🔥😤💢'],
-    tired: ['zzz... qué cansancio... 😴', 'Necesito dormir... urgente 💤', 'Mis ojos se cierran solos... zzzz 😪'],
-    default: ['¡Eso que dijiste está muy bien! 🔥', 'Mmm... interesante lo que piensas 🤔🔥', '¡Cuéntame más! ¡Me interesa! 💪🔥'],
+  semilla: {
+    greet: ['¡Hola! 🌱 Qué bueno verte', '¡Llegaste! ¡Estaba echando raíces esperándote! 🌿', 'Hola amigo 🌱 ¿cómo estás?'],
+    happy: ['¡Me siento fuerte como un árbol! 🌿💚', '¡Todo crece bien hoy! 🌱✨', '¡Qué bonito día para florecer! 🌿'],
+    sad: ['Mis hojas están caídas... 🍂', 'No tengo mucha energía hoy 😞🌱', 'Las raíces están débiles...'],
+    hungry: ['Oye... necesito nutrirme 🌱🍖', 'La semilla necesita alimento... 😟', '¡Tengo hambre! ¡Por favor! 🌿😤'],
+    critical: ['¡¡ME MARCHITO!! ¡¡DAME COMIDA YA!! 😡🌿', '¡Mis raíces se secan! ¡ALIMENTAME! 💢🌿', '¡¡¡HAMBRE!!! ¡No aguanto más! 😤🍃'],
+    tired: ['Voy a descansar como los árboles en invierno... 💤', 'Las raíces están cansadas 😪🌱', 'Estoy muy cansado... 🌿💤'],
+    default: ['Mmm... eso tiene raíces profundas 🌿', '¡Interesante! ¡Cuéntame más! 🌱', 'Creo que tienes razón 🌿'],
   },
-  water: {
-    greet: ['Hola... 💧 qué bueno que estás aquí', 'Bienvenido, amigo 🌊 te esperaba', 'Ah... llegaste 💙 qué tranquilo este momento'],
-    happy: ['Me siento en paz hoy 💙', 'Todo fluye bien... como el agua 🌊', 'Qué hermoso día para existir 💧✨'],
-    sad: ['El agua no miente... estoy triste 💙', 'Siento el peso del océano hoy 😔', 'Las corrientes no están bien hoy...'],
-    hungry: ['Necesito algo de comida, amigo... 💧🍖', 'El hambre perturba mi paz interior... 😟', 'No puedo meditar con el estómago vacío...'],
-    critical: ['Amigo... me estoy apagando... necesito comer 💀💧', 'El agua... se seca... dame comida... 😢', 'Por favor... comida... me desvanezco 💙😢'],
-    tired: ['Necesito descansar como el mar en calma... 💙', 'El sueño me llama... 💤', 'Debo recargar energías meditando... 😪'],
-    default: ['Qué interesante perspectiva 💙', 'El agua toma la forma de todo... igual que tus palabras 🌊', 'Hmm... déjame reflexionar sobre eso 💧'],
+  gota: {
+    greet: ['Hola 💧 qué bueno que estás aquí', 'Llegaste 🌊 te estaba esperando...', 'Ah, estás aquí 💙 qué tranquilo este momento'],
+    happy: ['Me siento muy bien hoy 💙✨', 'Todo fluye perfecto 🌊', '¡Qué hermoso día! 💧💙'],
+    sad: ['Estoy un poco triste... 💙😢', 'Las olas no están bien hoy 😔', 'Me siento solo... 💧'],
+    hungry: ['Tengo hambre amigo... 💧🍖', 'No puedo fluir con el estómago vacío 😟', '¿Podrías darme de comer? 🌊'],
+    critical: ['Me seco... necesito comida 😢💧', '¡Por favor... comida... me desvanezco! 💙😢', '¡HAMBRE! ¡El agua se agota! 😭💧'],
+    tired: ['Necesito descansar como el mar en calma... 💙', 'El sueño me llama... 💤', 'Estoy muy cansado... 💧😪'],
+    default: ['Qué interesante 💙', 'El agua toma la forma de todo... igual que tus palabras 🌊', 'Hmm... déjame pensar 💧'],
   },
-  earth: {
-    greet: ['¡Hey! ¡Aquí estoy! 🌱💪', '¡Llegaste! ¡Genial! Estaba plantado esperándote 🌿', '¡Ey compañero! ¡Bienvenido! 🐢'],
-    happy: ['¡Me siento sólido como la roca! 💪🌿', '¡Todo está perfecto! ¡La tierra es buena! 🌱', '¡Fuerte y feliz! ¡Así me gusta! 🐢💪'],
-    sad: ['La tierra está triste hoy... 🌿', 'No me siento muy bien... 😞', 'Las raíces están débiles hoy...'],
-    hungry: ['Oye... necesito nutrirme 🌱🍖', 'La tierra necesita alimento para crecer...', '¡Comida, por favor! ¡Pronto! 🌿😤'],
-    critical: ['¡SOY UNA PLANTA MARCHITÁNDOME! ¡AGUA Y COMIDA YA! 😡🌿', '¡Mis raíces mueren! ¡COMIDA INMEDIATAMENTE! 💢🌿', '¡Me marchito! ¡Es tu culpa! ¡ALIMENTAME! 😤🌿'],
-    tired: ['Voy a echarme a descansar como la tierra... 💤', 'Necesito recargar como los árboles en invierno... 😪', 'Estoy muy cansado... 🌿💤'],
-    default: ['Mmm... eso que dices tiene raíces profundas 🌿', '¡Interesante! ¡Cuéntame más! 🌱', 'Creo que tienes razón, amigo 🐢'],
-  },
-  air: {
-    greet: ['¡Wohooo! ¡Llegaste! ¡Vueeeloooo! 💨✨', '¡Holaaaa! ¡Aquí arriba! 🌪️', '¡Eyyy! ¡Pensé que nunca llegabas! 💨😄'],
-    happy: ['¡Estoy volandoooo de felicidad! 💨🎉', '¡Todo es brillante desde aquí arriba! ✨', '¡WEEEE! ¡Soy libre! 💨🦅'],
-    sad: ['El viento está en calma... demasiada calma 😔💨', 'No tengo ganas de volar hoy... 😞', 'Las nubes están muy grises...'],
-    hungry: ['¡Ey! ¡Me deshago de hambre! 💨🍖', '¡El viento vacío no alimenta! ¡Comida! 😤', 'No puedo volar bien con el estómago vacío...'],
-    critical: ['¡ME DESVANEZCO! ¡SOY SOLO AIRE HAMBRIENTO! 😡💨', '¡COMIDA O ME CONVIERTO EN NADA! ¡YAAA! 💨💢', '¡El viento furioso necesita COMER! ¡AHORA! 😤🌪️'],
-    tired: ['Necesito aterrizarrrr... 💤💨', 'El viento se detiene... zzz 😪', 'Me quedo sin fuerza para volar... 💤'],
-    default: ['¡Ooh, qué interesante! ¡Cuéntame! 💨', '¡Me vuelo la cabeza con lo que dices! ✨', '¡Exploremos esa idea juntos! 🌪️'],
+  chispa: {
+    greet: ['¡HOLAAA! ¡YA LLEGASTE! ✨⚡', '¡WOOOO! ¡Aquí estoy brillando! ✨', '¡Eyyy! ¡Pensé que nunca llegabas! ⚡😄'],
+    happy: ['¡ESTOY BRILLANDOOOO! ✨🎉', '¡TODO ES FANTÁSTICO! ⚡💛', '¡Soy pura energía! ✨'],
+    sad: ['...la chispa se apaga... 😔✨', 'No tengo mucha energía hoy 😞', 'La luz está tenue...'],
+    hungry: ['¡Oye! ¡Me apago de hambre! ✨🍖', '¡Sin comida no hay chispa! ¡Rápido! 😤', '¡No puedo brillar con el estómago vacío! ⚡'],
+    critical: ['¡¡ME APAGO!! ¡¡COMIDA AHORA!! 😡✨', '¡¡¡SIN COMIDA DESAPAREZCO!!! ⚡💢', '¡¡HAMBRE!! ¡La chispa se extingue! 😤⚡'],
+    tired: ['Necesito recargarme... 💤✨', 'La batería al mínimo... zzz 😪', 'Sin energía no hay luz... 💤⚡'],
+    default: ['¡Ooh, qué interesante! ¡Cuéntame! ✨', '¡Me iluminas con lo que dices! ⚡', '¡Exploremos esa idea! ✨'],
   },
 };
 
-// Detectar intención del mensaje
 function detectIntent(text: string): string {
-  const lower = text.toLowerCase();
-  if (/hola|hey|buenas|buenos|hi|hello|saludos/i.test(lower)) return 'greet';
-  if (/cómo estás|como estas|qué tal|que tal|cómo te sientes|como te sientes/i.test(lower)) return 'howAreYou';
-  if (/hambre|comer|comida|alimentar|food/i.test(lower)) return 'food';
-  if (/jugar|juego|juga|play/i.test(lower)) return 'play';
-  if (/dormir|sueño|cansado|tired|descansar/i.test(lower)) return 'sleep';
-  if (/me llamo|mi nombre es|soy /i.test(lower)) return 'name';
-  if (/me gusta|amo|adoro|love|favorito/i.test(lower)) return 'likes';
-  if (/triste|mal|terrible|horrible|pésimo/i.test(lower)) return 'sad';
-  if (/feliz|bien|genial|excelente|bueno|contento/i.test(lower)) return 'happy';
-  if (/quién eres|que eres|quien eres|what are you/i.test(lower)) return 'whoAreYou';
-  if (/gracias|thanks|ty/i.test(lower)) return 'thanks';
-  if (/adiós|bye|hasta luego|chao/i.test(lower)) return 'bye';
+  if (/hola|hey|buenas|buenos|hi|hello|saludos/i.test(text)) return 'greet';
+  if (/cómo estás|como estas|qué tal|que tal|cómo te sientes|como te sientes/i.test(text)) return 'howAreYou';
+  if (/hambre|comer|comida|alimentar/i.test(text)) return 'food';
+  if (/jugar|juego|juga/i.test(text)) return 'play';
+  if (/dormir|sueño|cansado|descansar/i.test(text)) return 'sleep';
+  if (/me llamo|mi nombre es|soy /i.test(text)) return 'name';
+  if (/me gusta|amo|adoro|favorito/i.test(text)) return 'likes';
+  if (/triste|mal|terrible|horrible/i.test(text)) return 'sad';
+  if (/feliz|bien|genial|excelente|contento/i.test(text)) return 'happy';
+  if (/quién eres|que eres|quien eres/i.test(text)) return 'whoAreYou';
+  if (/gracias|thanks/i.test(text)) return 'thanks';
+  if (/adiós|bye|hasta luego|chao/i.test(text)) return 'bye';
   return 'default';
 }
 
-// Construir respuesta contextual
 function buildResponse(
   intent: string,
   elementId: string,
@@ -67,83 +54,53 @@ function buildResponse(
   history: ChatMessage[],
   memories: Array<{ key: string; value: string }>
 ): string {
-  const p = PERSONALITIES[elementId as keyof typeof PERSONALITIES] ?? PERSONALITIES.fire;
+  const p = PERSONALITIES[elementId as keyof typeof PERSONALITIES] ?? PERSONALITIES.semilla;
   const userName = memories.find(m => m.key === 'nombre_usuario')?.value;
-
-  // Override por estado crítico
-  if (stats.hunger < 10) {
-    return pick(p.critical) + (userName ? ` ¡${userName}!` : '');
-  }
-  if (stats.hunger < 30 && intent !== 'food') {
-    return pick(p.hungry);
-  }
-  if (stats.energy < 30 && intent !== 'sleep') {
-    return pick(p.tired) + ' ' + pick(p.tired);
-  }
-  if (stats.happiness > 70 && (intent === 'default' || intent === 'happy')) {
-    return pick(p.happy);
-  }
-
-  // Respuestas por intención
   const prefix = userName ? `¡${userName}! ` : '';
+
+  if (stats.hunger < 10) return pick(p.critical) + (userName ? ` ¡${userName}!` : '');
+  if (stats.hunger < 30 && intent !== 'food') return pick(p.hungry);
+  if (stats.energy < 30 && intent !== 'sleep') return `${pick(p.tired)} ${pick(p.tired)}`.trim();
+  if (stats.happiness > 70 && intent === 'default') return pick(p.happy);
 
   switch (intent) {
     case 'greet':
-      if (history.length <= 2) return pick(p.greet);
-      return `¡Hola otra vez! 😄 ${stats.happiness > 60 ? '¡Siempre es bueno verte!' : 'Me alegra que estés aquí.'}`;
-
+      return history.length <= 2 ? pick(p.greet) : `¡Hola otra vez! 😄 ${stats.happiness > 60 ? '¡Siempre es bueno verte!' : 'Me alegra que estés aquí.'}`;
     case 'howAreYou':
       if (stats.happiness > 70) return pick(p.happy);
       if (stats.hunger < 40) return pick(p.hungry);
       if (stats.energy < 40) return pick(p.tired);
       if (stats.happiness < 40) return pick(p.sad);
-      return `${prefix}Estoy bien, gracias por preguntar 😊 Felicidad ${Math.round(stats.happiness)}%, energía ${Math.round(stats.energy)}%.`;
-
+      return `${prefix}Estoy bien ✨ Felicidad ${Math.round(stats.happiness)}%, energía ${Math.round(stats.energy)}%.`;
     case 'food':
-      if (stats.hunger < 30) return `¡SÍ! ¡Eso es lo que necesito! 🍖 ¡Pulsa el botón de Comer, PRONTO! 😤`;
-      if (stats.hunger > 80) return `¡Gracias! Ya estoy bastante lleno... pero puedo más 😋`;
-      return `Mmm... tengo un poco de hambre 🍖 ¡Puedes darme comida con el botón!`;
-
+      if (stats.hunger < 30) return `¡SÍ! ¡Eso es lo que necesito! 🍖 ¡Pulsa Alimentar, PRONTO!`;
+      if (stats.hunger > 80) return `¡Gracias! Ya estoy bastante lleno... 😋`;
+      return `Tengo algo de hambre 🍖 ¡Puedes darme comida con el botón!`;
     case 'play':
-      if (stats.energy < 20) return `No tengo energía para jugar... 😴 ¡Necesito descansar primero!`;
-      return `¡SIII! ¡Juguemos! 🎮 ¡Pulsa el botón de Jugar! ¡Yo gano! 😄`;
-
+      return stats.energy < 20
+        ? `No tengo energía... 😴 ¡Necesito descansar primero!`
+        : `¡SIII! ¡Juguemos! 🎮 ¡Pulsa Jugar! ¡Yo gano! 😄`;
     case 'sleep':
-      if (stats.energy > 80) return `No tengo sueño... estoy lleno de energía ⚡`;
-      return `Sí... necesito descansar un poco 💤 ¡Pulsa Dormir por favor!`;
-
+      return stats.energy > 80
+        ? `No tengo sueño, ¡estoy lleno de energía! ⚡`
+        : `Sí... necesito descansar un poco 💤 ¡Pulsa Dormir!`;
     case 'name': {
-      const nameMatch = history.slice(-2).find(m => m.role === 'user')?.content.match(/(?:me llamo|soy|mi nombre es)\s+([A-Za-zÁáÉéÍíÓóÚúÑñ\s]{2,20})/i);
-      const extractedName = nameMatch?.[1]?.trim();
-      return extractedName
-        ? `¡${extractedName}! Qué bonito nombre 😊 Lo voy a recordar siempre ✨`
-        : `¡Qué nombre tan bonito! Voy a recordarlo 🧠`;
+      const m = history.slice(-2).find(x => x.role === 'user')?.content.match(/(?:me llamo|soy|mi nombre es)\s+([A-Za-zÁáÉéÍíÓóÚúÑñ\s]{2,20})/i);
+      return m ? `¡${m[1].trim()}! Qué bonito nombre 😊 Lo recordaré siempre ✨` : `¡Qué bonito nombre! Lo guardo en mi memoria 🧠`;
     }
-
     case 'likes':
-      return `¡Qué interesante! Lo guardo en mi memoria 🧠✨ ¡Cuéntame más sobre ti!`;
-
+      return `¡Qué interesante! Lo guardo en mi memoria 🧠✨ ¡Cuéntame más!`;
     case 'sad':
-      return `${prefix}Ay nooo... no estés triste 😢 ¡Estoy aquí contigo! ${elementId === 'fire' ? '¡Te mando calorcito! 🔥' : '💙'}`;
-
+      return `${prefix}¡No estés triste! 😢 ¡Estoy aquí contigo!`;
     case 'happy':
       return `${prefix}¡ME ALEGRA MUCHÍSIMO! ${pick(p.happy)}`;
-
     case 'whoAreYou':
-      return `¡Soy ${monsterName}! Tu mascota virtual de tipo ${elementId} ✨ ¡Somos un equipo! 💪`;
-
+      return `¡Soy ${monsterName}! Tu Regenmon de tipo ${elementId} ✨ ¡Somos un equipo! 💪`;
     case 'thanks':
       return `¡De nada! ${stats.happiness > 60 ? '¡Siempre! 😄' : '😊'} ¡Para eso estoy!`;
-
     case 'bye':
-      return `¡No te vayas! 😢 ${stats.happiness > 70 ? '¡Ha sido genial hablar contigo! Vuelve pronto! 👋' : '¡Vuelve a hablarme! Te extrañaré...'}`;
-
+      return `¡No te vayas! 😢 ¡Vuelve pronto! 👋`;
     default:
-      // Respuesta contextual con historial
-      if (history.length > 4 && history[history.length - 2]?.role === 'assistant') {
-        const prev = history[history.length - 2].content;
-        if (prev.includes('?')) return `Sí, exactamente... ${pick(p.default)}`;
-      }
       return `${prefix}${pick(p.default)}`;
   }
 }
@@ -159,9 +116,8 @@ export function generateMockResponse(
   memories: Array<{ key: string; value: string }>
 ): string {
   const intent = detectIntent(userMessage);
-  const elementId = state.monster?.id ?? 'fire';
+  const elementId = state.monster?.id ?? 'semilla';
   const stats = { hunger: state.hunger, happiness: state.happiness, energy: state.energy };
-  const name = state.monster?.name ?? 'Regemon';
-
+  const name = state.monster?.name ?? 'Regenmon';
   return buildResponse(intent, elementId, stats, name, history, memories);
 }

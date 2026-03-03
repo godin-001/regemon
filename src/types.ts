@@ -1,4 +1,4 @@
-export type ElementType = 'fire' | 'water' | 'earth' | 'air';
+export type ElementType = 'semilla' | 'gota' | 'chispa';
 export type LifeStage = 'egg' | 'baby' | 'adult' | 'dead';
 
 export interface Monster {
