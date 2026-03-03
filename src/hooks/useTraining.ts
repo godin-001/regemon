@@ -16,15 +16,15 @@ export const STAGE_THRESHOLDS: Record<1 | 2 | 3, number> = {
 };
 
 export const CATEGORY_NAMES: Record<TrainingCategory, string> = {
-  codigo: '💻 Código',
-  diseno: '🎨 Diseño',
+  codigo: '📝 Tareas',
+  diseno: '🎨 Que cool',
   proyecto: '🚀 Proyecto',
   aprendizaje: '📚 Aprendizaje',
 };
 
 export const CATEGORY_CRITERIA: Record<TrainingCategory, string> = {
-  codigo: 'organización del código, buenas prácticas, complejidad y legibilidad',
-  diseno: 'estética, colores, tipografía y creatividad visual',
+  codigo: 'organización, buenas prácticas y complejidad del trabajo',
+  diseno: 'estética, colores, tipografía y creatividad visual en UI/UX y diseño gráfico',
   proyecto: 'funcionalidad, calidad, complejidad y completitud del proyecto',
   aprendizaje: 'esfuerzo demostrado, comprensión del tema y aplicación práctica',
 };

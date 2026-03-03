@@ -49,10 +49,10 @@ function nextThreshold(stage: 1 | 2 | 3): number {
 }
 
 const CATEGORY_COLORS: Record<TrainingCategory, string> = {
-  codigo: '#5c7cfa',
-  diseno: '#cc5de8',
-  proyecto: '#20c997',
-  aprendizaje: '#f59f00',
+  codigo: '#228be6',
+  diseno: '#339af0',
+  proyecto: '#1971c2',
+  aprendizaje: '#4dabf7',
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
