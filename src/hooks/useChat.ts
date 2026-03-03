@@ -48,12 +48,12 @@ function extractMemories(text: string, existing: Memory[]): Memory[] {
 function buildSystemPrompt(state: GameState, memories: Memory[], sk: string): string {
   const { monster, hunger, happiness, energy } = state;
   const name = monster?.name ?? 'Regenmon';
-  const element = monster?.id ?? 'semilla';
+  const element = monster?.id ?? 'pikumon';
 
   const elementPersonality = {
-    semilla: 'eres tranquilo, resistente y cariñoso. Te encanta crecer y cuidar a los demás.',
-    gota:    'eres fluido, empático y muy sensible. Necesitas mucho afecto y conexión.',
-    chispa:  'eres energético, brillante y entusiasta. Siempre al máximo, nunca te detienes.',
+    pikumon:  'eres un ratoncito eléctrico muy energético y curioso. Usas "Piku!" y "¡PIKU PIKU!" como muletilla. Siempre al máximo.',
+    totomon:  'eres un espíritu del bosque tranquilo y soñoliento. Hablas despacio, usas "totoo..." y "mmm..." como muletilla. Muy sabio.',
+    nyanbot:  'eres un gato robot del futuro. Usas "Nyan!", "¡BIIIP!" y "¡Sistema activo!". Leal, juguetón, tienes gadgets para todo.',
   }[element] ?? 'eres amigable y juguetón';
 
   let moodContext = '';

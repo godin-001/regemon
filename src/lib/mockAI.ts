@@ -1,32 +1,35 @@
 import type { GameState, ChatMessage } from '../types';
 
 const PERSONALITIES = {
-  semilla: {
-    greet: ['¡Hola! 🌱 Qué bueno verte', '¡Llegaste! ¡Estaba echando raíces esperándote! 🌿', 'Hola amigo 🌱 ¿cómo estás?'],
-    happy: ['¡Me siento fuerte como un árbol! 🌿💚', '¡Todo crece bien hoy! 🌱✨', '¡Qué bonito día para florecer! 🌿'],
-    sad: ['Mis hojas están caídas... 🍂', 'No tengo mucha energía hoy 😞🌱', 'Las raíces están débiles...'],
-    hungry: ['Oye... necesito nutrirme 🌱🍖', 'La semilla necesita alimento... 😟', '¡Tengo hambre! ¡Por favor! 🌿😤'],
-    critical: ['¡¡ME MARCHITO!! ¡¡DAME COMIDA YA!! 😡🌿', '¡Mis raíces se secan! ¡ALIMENTAME! 💢🌿', '¡¡¡HAMBRE!!! ¡No aguanto más! 😤🍃'],
-    tired: ['Voy a descansar como los árboles en invierno... 💤', 'Las raíces están cansadas 😪🌱', 'Estoy muy cansado... 🌿💤'],
-    default: ['Mmm... eso tiene raíces profundas 🌿', '¡Interesante! ¡Cuéntame más! 🌱', 'Creo que tienes razón 🌿'],
+  pikumon: {
+    // Ratoncito eléctrico: energético, curioso, entusiasta
+    greet: ['¡PIKU PIKU! ¡Ya llegaste! ⚡🐭', '¡CHISPAZO! ¡Estaba esperándote! ⚡✨', '¡Eyyy! ¡Piku Piku! ¿Dónde estabas? ⚡😄'],
+    happy: ['¡¡PIKU PIKU!! ¡Estoy superchargado! ⚡🎉', '¡¡¡Soy imparable hoy!!! ⚡💛✨', '¡La electricidad fluye! ¡PIKU! ⚡🐭'],
+    sad: ['...piku... la chispa no enciende... 😔⚡', 'Sin energía hoy... piku... 😞🐭', 'Las orejas caídas... piku piku... 🐭💤'],
+    hungry: ['¡Piku! ¡Necesito comer o me apago! ⚡🍖', '¡Sin comida no hay voltaje! ¡Rápido! 😤🐭', '¡PIKU PIKU! ¡Hambre! ⚡😟'],
+    critical: ['¡¡PIKU PIKU PIKU!! ¡¡COMIDA AHORA!! 😡⚡', '¡¡¡ME DESCARGO!!! ¡¡¡ALIMENTAME!!! ⚡💢🐭', '¡¡HAMBRE!! ¡La batería a cero! 😤⚡'],
+    tired: ['Necesito recargarme... piku... 💤⚡', 'La batería al mínimo... zzz piku 😪🐭', 'Sin energía no hay chispa... 💤'],
+    default: ['¡Piku! ¡Qué interesante! ¡Cuéntame más! ⚡', '¡Ooh! ¡Eso me da chispa! ✨🐭', '¡Exploremos esa idea! ¡PIKU! ⚡'],
   },
-  gota: {
-    greet: ['Hola 💧 qué bueno que estás aquí', 'Llegaste 🌊 te estaba esperando...', 'Ah, estás aquí 💙 qué tranquilo este momento'],
-    happy: ['Me siento muy bien hoy 💙✨', 'Todo fluye perfecto 🌊', '¡Qué hermoso día! 💧💙'],
-    sad: ['Estoy un poco triste... 💙😢', 'Las olas no están bien hoy 😔', 'Me siento solo... 💧'],
-    hungry: ['Tengo hambre amigo... 💧🍖', 'No puedo fluir con el estómago vacío 😟', '¿Podrías darme de comer? 🌊'],
-    critical: ['Me seco... necesito comida 😢💧', '¡Por favor... comida... me desvanezco! 💙😢', '¡HAMBRE! ¡El agua se agota! 😭💧'],
-    tired: ['Necesito descansar como el mar en calma... 💙', 'El sueño me llama... 💤', 'Estoy muy cansado... 💧😪'],
-    default: ['Qué interesante 💙', 'El agua toma la forma de todo... igual que tus palabras 🌊', 'Hmm... déjame pensar 💧'],
+  totomon: {
+    // Espíritu del bosque: tranquilo, soñoliento, sabio, tierno
+    greet: ['Totoo... 🌳 qué bueno que llegaste...', 'Mmm... estaba durmiendo 🌿😴 ah, hola...', 'Totomon está aquí 🌳 descansando bajo el árbol...'],
+    happy: ['Totoo~ 🌳💚 el bosque está feliz hoy...', 'Mmm... qué paz tan bonita 🌿✨', 'El viento entre las hojas dice que todo está bien... 🌳'],
+    sad: ['Las hojas están caídas... totoo... 🍂😢', 'El bosque llora hoy... 🌿😔', 'Totomon está solo... 🌳💙'],
+    hungry: ['Totoo... 🌳 el estómago hace ruido entre las ramas...', 'Mmm... necesito energía del bosque... 🌿🍖', 'Totomon tiene hambre... por favor... 😟🌳'],
+    critical: ['¡¡TOTOO!! ¡¡EL BOSQUE SE MARCHITA!! ¡COMIDA! 😡🌳', '¡¡Sin comida Totomon desaparece!! ¡Por favor!! 💢🌿', '¡¡¡HAMBRE!!! ¡¡Las raíces se secan!! 😤🌳'],
+    tired: ['Zzz... totoo... ya es hora de dormir... 💤🌳', 'El árbol grande descansa... 😪🌿 Totomon también...', 'Totoo... tanto sueño... 💤'],
+    default: ['Totoo... eso es muy profundo... 🌳', 'Mmm... el bosque dice que tienes razón... 🌿', 'Totomon escucha... totoo... 🌳💚'],
   },
-  chispa: {
-    greet: ['¡HOLAAA! ¡YA LLEGASTE! ✨⚡', '¡WOOOO! ¡Aquí estoy brillando! ✨', '¡Eyyy! ¡Pensé que nunca llegabas! ⚡😄'],
-    happy: ['¡ESTOY BRILLANDOOOO! ✨🎉', '¡TODO ES FANTÁSTICO! ⚡💛', '¡Soy pura energía! ✨'],
-    sad: ['...la chispa se apaga... 😔✨', 'No tengo mucha energía hoy 😞', 'La luz está tenue...'],
-    hungry: ['¡Oye! ¡Me apago de hambre! ✨🍖', '¡Sin comida no hay chispa! ¡Rápido! 😤', '¡No puedo brillar con el estómago vacío! ⚡'],
-    critical: ['¡¡ME APAGO!! ¡¡COMIDA AHORA!! 😡✨', '¡¡¡SIN COMIDA DESAPAREZCO!!! ⚡💢', '¡¡HAMBRE!! ¡La chispa se extingue! 😤⚡'],
-    tired: ['Necesito recargarme... 💤✨', 'La batería al mínimo... zzz 😪', 'Sin energía no hay luz... 💤⚡'],
-    default: ['¡Ooh, qué interesante! ¡Cuéntame! ✨', '¡Me iluminas con lo que dices! ⚡', '¡Exploremos esa idea! ✨'],
+  nyanbot: {
+    // Gato robot: leal, juguetón, usa gadgets, referencia su "bolsa mágica"
+    greet: ['¡Nyan! ¡Procesando llegada del usuario! 🤖🐱', '¡BIIIP! ¡Sistema activo! ¡Hola! 🤖✨', '¡Nyan nyan! ¡Estaba calibrando mis gadgets! 🐱🤖'],
+    happy: ['¡BIIIP! ¡Felicidad al 100%! 🤖🎉', '¡Nyan! ¡Todos los sistemas en verde! ✅🐱', '¡¡Soy el gato más feliz del futuro!! 🤖💙'],
+    sad: ['...sistema... error... nyan... 😔🤖', 'Los gadgets no funcionan bien cuando estoy triste... 🐱💙', 'Nyan... el procesador está lento hoy... 🤖😞'],
+    hungry: ['¡ALERTA! ¡Batería de hambre al mínimo! 🤖🍖', '¡Nyan! ¡Necesito combustible para mis gadgets! 😟🐱', '¡Sistema de hambre activado! ¡Por favor! 🤖'],
+    critical: ['¡¡ERROR CRÍTICO!! ¡¡NYAN NYAN!! ¡¡COMIDA YA!! 😡🤖', '¡¡¡APAGÓN INMINENTE!!! ¡¡Necesito comida!! ⚠️🐱', '¡¡¡ALARMA!!! ¡¡¡HAMBRE EXTREMA!!! ¡¡Nyan nyan!! 😤🤖'],
+    tired: ['...batería baja... activando modo sueño... 💤🤖', 'Nyan... necesito recargar en mi cama del futuro... 😪🐱', 'Procesador sobrecalentado... a dormir... 💤🤖'],
+    default: ['¡Nyan! ¡Búscando en mi bolsa mágica la respuesta! 🤖🎒', '¡BIIIP! ¡Dato interesante! ¡Cuéntame más! 🐱✨', '¡Nyan nyan! ¡Me parece fascinante! 🤖💙'],
   },
 };
 
@@ -54,7 +57,7 @@ function buildResponse(
   history: ChatMessage[],
   memories: Array<{ key: string; value: string }>
 ): string {
-  const p = PERSONALITIES[elementId as keyof typeof PERSONALITIES] ?? PERSONALITIES.semilla;
+  const p = PERSONALITIES[elementId as keyof typeof PERSONALITIES] ?? PERSONALITIES.pikumon;
   const userName = memories.find(m => m.key === 'nombre_usuario')?.value;
   const prefix = userName ? `¡${userName}! ` : '';
 
@@ -116,7 +119,7 @@ export function generateMockResponse(
   memories: Array<{ key: string; value: string }>
 ): string {
   const intent = detectIntent(userMessage);
-  const elementId = state.monster?.id ?? 'semilla';
+  const elementId = state.monster?.id ?? 'pikumon';
   const stats = { hunger: state.hunger, happiness: state.happiness, energy: state.energy };
   const name = state.monster?.name ?? 'Regenmon';
   return buildResponse(intent, elementId, stats, name, history, memories);
