@@ -1,67 +1,51 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { ChatMessage, Memory, GameState } from '../types';
 import { generateMockResponse } from '../lib/mockAI';
 
-const CHAT_KEY = 'regemon_chat';
-const MEMORY_KEY = 'regemon_memories';
 const MAX_MESSAGES = 20;
 
-function loadMessages(): ChatMessage[] {
+function chatKey(sk: string)   { return `${sk}_chat`; }
+function memKey(sk: string)    { return `${sk}_memories`; }
+
+function loadMessages(sk: string): ChatMessage[] {
   try {
-    const saved = localStorage.getItem(CHAT_KEY);
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
+    const raw = localStorage.getItem(chatKey(sk));
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
 }
 
-function loadMemories(): Memory[] {
+function loadMemories(sk: string): Memory[] {
   try {
-    const saved = localStorage.getItem(MEMORY_KEY);
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
+    const raw = localStorage.getItem(memKey(sk));
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
 }
 
-function saveMessages(msgs: ChatMessage[]) {
-  localStorage.setItem(CHAT_KEY, JSON.stringify(msgs.slice(-MAX_MESSAGES)));
+function saveMessages(sk: string, msgs: ChatMessage[]) {
+  localStorage.setItem(chatKey(sk), JSON.stringify(msgs.slice(-MAX_MESSAGES)));
 }
 
-function saveMemories(mems: Memory[]) {
-  localStorage.setItem(MEMORY_KEY, JSON.stringify(mems));
+function saveMemories(sk: string, mems: Memory[]) {
+  localStorage.setItem(memKey(sk), JSON.stringify(mems));
 }
 
-// Extract memories from message content
 function extractMemories(text: string, existing: Memory[]): Memory[] {
   const newMems: Memory[] = [];
-  
   const nameMatch = text.match(/me llamo ([A-Za-zÁáÉéÍíÓóÚúÑñ\s]{2,20})/i);
-  if (nameMatch) {
-    newMems.push({ key: 'nombre_usuario', value: nameMatch[1].trim(), savedAt: Date.now() });
-  }
-  
+  if (nameMatch) newMems.push({ key: 'nombre_usuario', value: nameMatch[1].trim(), savedAt: Date.now() });
   const likesMatch = text.match(/me gusta(?:n)? ([^,.!?]{3,40})/i);
-  if (likesMatch) {
-    newMems.push({ key: `gusta_${Date.now()}`, value: likesMatch[1].trim(), savedAt: Date.now() });
-  }
-
+  if (likesMatch) newMems.push({ key: `gusta_${Date.now()}`, value: likesMatch[1].trim(), savedAt: Date.now() });
   const hateMatch = text.match(/no me gusta(?:n)? ([^,.!?]{3,40})/i);
-  if (hateMatch) {
-    newMems.push({ key: `no_gusta_${Date.now()}`, value: hateMatch[1].trim(), savedAt: Date.now() });
-  }
-
-  // Merge: update existing key or add new
+  if (hateMatch) newMems.push({ key: `no_gusta_${Date.now()}`, value: hateMatch[1].trim(), savedAt: Date.now() });
   const merged = [...existing];
   for (const m of newMems) {
     const idx = merged.findIndex(e => e.key === m.key);
-    if (idx >= 0) merged[idx] = m;
-    else merged.push(m);
+    if (idx >= 0) merged[idx] = m; else merged.push(m);
   }
-  return merged.slice(0, 10); // max 10 memories
+  return merged.slice(0, 10);
 }
 
-function buildSystemPrompt(state: GameState, memories: Memory[]): string {
+function buildSystemPrompt(state: GameState, memories: Memory[], sk: string): string {
   const { monster, hunger, happiness, energy } = state;
   const name = monster?.name ?? 'Regenmon';
   const element = monster?.id ?? 'semilla';
@@ -73,38 +57,39 @@ function buildSystemPrompt(state: GameState, memories: Memory[]): string {
   }[element] ?? 'eres amigable y juguetón';
 
   let moodContext = '';
-  if (hunger < 10) {
-    moodContext = '⚠️ ESTÁS MURIENDO DE HAMBRE. Estás ENOJADÍSIMO y maldices (levemente). Tus respuestas son cortas, furiosas y usas emojis de fuego 🔥😡. Exiges comida AHORA.';
-  } else if (hunger < 30) {
-    moodContext = 'Tienes mucha hambre. Mencionas que necesitas comer en cada respuesta.';
-  } else if (energy < 30) {
-    moodContext = 'Estás muy cansado. Tus respuestas son más cortas y mencionas que necesitas dormir.';
-  } else if (happiness > 70) {
-    moodContext = '¡Estás muy feliz! Eres súper entusiasta, usas muchos emojis y signos de exclamación.';
-  }
+  if (hunger < 10) moodContext = '⚠️ ESTÁS MURIENDO DE HAMBRE. Estás ENOJADÍSIMO. Respuestas cortas y furiosas.';
+  else if (hunger < 30) moodContext = 'Tienes mucha hambre. Mencionas que necesitas comer.';
+  else if (energy < 30) moodContext = 'Estás muy cansado. Respuestas cortas y soñolientas.';
+  else if (happiness > 70) moodContext = '¡Estás muy feliz! Muy entusiasta, usas más emojis.';
 
-  const memoryContext = memories.length > 0
-    ? `\nRecuerdas esto sobre tu dueño: ${memories.map(m => `${m.key}: ${m.value}`).join(', ')}.`
+  const memContext = memories.length > 0
+    ? `\nRecuerdas sobre tu dueño: ${memories.map(m => `${m.key}: ${m.value}`).join(', ')}.`
     : '';
 
-  return `Eres ${name}, una mascota virtual de tipo ${element}. ${elementPersonality}
-Respondes SIEMPRE en español. Máximo 50 palabras por respuesta.
-Eres una mascota virtual pequeña y adorable. Hablas en primera persona como mascota.
-Usas emojis ocasionalmente pero no en exceso.
-Estado actual: Hambre ${Math.round(hunger)}%, Felicidad ${Math.round(happiness)}%, Energía ${Math.round(energy)}%.
-${moodContext}${memoryContext}
-Responde siempre en carácter, como la mascota que eres.`;
+  void sk; // used for context only
+  return `Eres ${name}, un Regenmon de tipo ${element}. ${elementPersonality}
+Respondes SIEMPRE en español. Máximo 50 palabras. Eres una mascota virtual adorable.
+Estado: Hambre ${Math.round(hunger)}%, Felicidad ${Math.round(happiness)}%, Energía ${Math.round(energy)}%.
+${moodContext}${memContext}`;
 }
 
 export function useChat(
+  storageKey: string,
   state: GameState,
   onStatEffect: (dHunger: number, dHappiness: number, dEnergy: number) => void,
   onEarnCoins?: () => void
 ) {
-  const [messages, setMessages] = useState<ChatMessage[]>(loadMessages);
-  const [memories, setMemories] = useState<Memory[]>(loadMemories);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => loadMessages(storageKey));
+  const [memories, setMemories] = useState<Memory[]>(() => loadMemories(storageKey));
   const [isTyping, setIsTyping] = useState(false);
   const consecutiveCount = useRef(0);
+
+  // Reload when user changes (login/logout)
+  useEffect(() => {
+    setMessages(loadMessages(storageKey));
+    setMemories(loadMemories(storageKey));
+    consecutiveCount.current = 0;
+  }, [storageKey]);
 
   const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isTyping) return;
@@ -118,16 +103,14 @@ export function useChat(
 
     const newMessages = [...messages, userMsg].slice(-MAX_MESSAGES);
     setMessages(newMessages);
-    saveMessages(newMessages);
+    saveMessages(storageKey, newMessages);
 
-    // Extract memories from user message
     const updatedMemories = extractMemories(text, memories);
     if (updatedMemories.length !== memories.length) {
       setMemories(updatedMemories);
-      saveMemories(updatedMemories);
+      saveMemories(storageKey, updatedMemories);
     }
 
-    // Stat effects
     consecutiveCount.current += 1;
     const extraEnergyDrain = consecutiveCount.current > 5 ? -3 : 0;
     onStatEffect(0, 5, -2 + extraEnergyDrain);
@@ -138,74 +121,56 @@ export function useChat(
       const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
       const hasRealKey = apiKey && apiKey !== 'placeholder' && apiKey.startsWith('sk-');
 
-      // Small delay for natural feel
       await new Promise(r => setTimeout(r, 500 + Math.random() * 700));
 
       let replyText: string;
 
       if (!hasRealKey) {
-        // Demo mode: smart rule-based AI
         replyText = generateMockResponse(text.trim(), newMessages, state, updatedMemories);
       } else {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
           body: JSON.stringify({
             model: 'gpt-4o-mini',
             max_tokens: 100,
             messages: [
-              { role: 'system', content: buildSystemPrompt(state, updatedMemories) },
+              { role: 'system', content: buildSystemPrompt(state, updatedMemories, storageKey) },
               ...newMessages.slice(-10).map(m => ({ role: m.role, content: m.content })),
             ],
           }),
         });
-
-        if (!response.ok) {
-          // Fallback to mock if API fails
-          replyText = generateMockResponse(text.trim(), newMessages, state, updatedMemories);
-        } else {
-          const data = await response.json();
-          replyText = data.choices?.[0]?.message?.content ?? generateMockResponse(text.trim(), newMessages, state, updatedMemories);
-        }
+        replyText = response.ok
+          ? ((await response.json()).choices?.[0]?.message?.content ?? generateMockResponse(text.trim(), newMessages, state, updatedMemories))
+          : generateMockResponse(text.trim(), newMessages, state, updatedMemories);
       }
 
       const assistantMsg: ChatMessage = {
-        id: `a_${Date.now()}`,
-        role: 'assistant',
-        content: replyText,
-        timestamp: Date.now(),
+        id: `a_${Date.now()}`, role: 'assistant', content: replyText, timestamp: Date.now(),
       };
-
       const withReply = [...newMessages, assistantMsg].slice(-MAX_MESSAGES);
       setMessages(withReply);
-      saveMessages(withReply);
-      // Earn coins on successful chat exchange
+      saveMessages(storageKey, withReply);
       onEarnCoins?.();
+
     } catch {
-      // Always fallback to mock AI, never show error to user
       const fallback = generateMockResponse(text.trim(), newMessages, state, updatedMemories);
-      const errMsg: ChatMessage = {
-        id: `e_${Date.now()}`,
-        role: 'assistant',
-        content: fallback,
-        timestamp: Date.now(),
-      };
+      const errMsg: ChatMessage = { id: `e_${Date.now()}`, role: 'assistant', content: fallback, timestamp: Date.now() };
       const withErr = [...newMessages, errMsg].slice(-MAX_MESSAGES);
       setMessages(withErr);
-      saveMessages(withErr);
+      saveMessages(storageKey, withErr);
     } finally {
       setIsTyping(false);
     }
-  }, [messages, memories, state, isTyping, onStatEffect]);
+  }, [messages, memories, state, storageKey, isTyping, onStatEffect, onEarnCoins]);
 
   const clearChat = useCallback(() => {
     setMessages([]);
-    localStorage.removeItem(CHAT_KEY);
+    setMemories([]);
+    localStorage.removeItem(chatKey(storageKey));
+    localStorage.removeItem(memKey(storageKey));
     consecutiveCount.current = 0;
-  }, []);
+  }, [storageKey]);
 
   return { messages, memories, isTyping, sendMessage, clearChat };
 }

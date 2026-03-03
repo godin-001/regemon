@@ -1,40 +1,36 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { GameState, Monster, LifeStage } from '../types';
 
-// Cada tipo tiene su propio perfil de decay y valores iniciales
 const ELEMENT_PROFILES = {
   semilla: {
-    // Semilla: equilibrada, hambre moderada, muy estable
     hungerDecay: 2.0,
-    happinessDecay: 0.8,  // felicidad duradera
+    happinessDecay: 0.8,
     energyDecay: 1.5,
     initialHunger: 85,
     initialHappiness: 80,
     initialEnergy: 75,
     feedBonus: 25,
     playBonus: 20,
-    sleepBonus: 50,       // descansa muy bien
+    sleepBonus: 50,
   },
   gota: {
-    // Gota: metabolismo lento, necesita mucha atención emocional
     hungerDecay: 1.2,
-    happinessDecay: 2.8,  // se pone triste rápido
+    happinessDecay: 2.8,
     energyDecay: 1.5,
     initialHunger: 75,
     initialHappiness: 90,
     initialEnergy: 80,
     feedBonus: 20,
-    playBonus: 38,        // jugar la hace muy feliz
+    playBonus: 38,
     sleepBonus: 45,
   },
   chispa: {
-    // Chispa: energía se va rapidísimo, pero brilla mucho
     hungerDecay: 2.2,
     happinessDecay: 0.7,
-    energyDecay: 3.5,     // se agota veloz
+    energyDecay: 3.5,
     initialHunger: 80,
     initialHappiness: 85,
-    initialEnergy: 95,    // arranca con pila llena
+    initialEnergy: 95,
     feedBonus: 28,
     playBonus: 30,
     sleepBonus: 42,
@@ -59,19 +55,39 @@ const INITIAL_STATE: GameState = {
   lastUpdate: Date.now(),
 };
 
-const STORAGE_KEY = 'regemon_save';
+function getStorageKey(storageKey: string) {
+  return `${storageKey}_game`;
+}
 
-export function useGame() {
-  const [state, setState] = useState<GameState>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+function loadState(storageKey: string): GameState {
+  try {
+    const saved = localStorage.getItem(getStorageKey(storageKey));
     return saved ? JSON.parse(saved) : INITIAL_STATE;
-  });
+  } catch {
+    return INITIAL_STATE;
+  }
+}
 
+function saveState(storageKey: string, state: GameState) {
+  try {
+    localStorage.setItem(getStorageKey(storageKey), JSON.stringify(state));
+  } catch { /* ignore */ }
+}
+
+export function useGame(storageKey: string) {
+  const [state, setState] = useState<GameState>(() => loadState(storageKey));
+
+  // Reload when user changes (login/logout)
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    setState(loadState(storageKey));
+  }, [storageKey]);
 
-  // Game tick — cada tipo decae a su propio ritmo
+  // Save on every state change
+  useEffect(() => {
+    saveState(storageKey, state);
+  }, [storageKey, state]);
+
+  // Game tick
   useEffect(() => {
     if (!state.chosen || state.stage === 'dead') return;
 
@@ -92,15 +108,7 @@ export function useGame() {
           newStage = 'baby';
         }
 
-        return {
-          ...prev,
-          hunger: newHunger,
-          happiness: newHappiness,
-          energy: newEnergy,
-          age: newAge,
-          stage: newStage,
-          lastUpdate: Date.now(),
-        };
+        return { ...prev, hunger: newHunger, happiness: newHappiness, energy: newEnergy, age: newAge, stage: newStage, lastUpdate: Date.now() };
       });
     }, 3000);
 
@@ -123,33 +131,21 @@ export function useGame() {
   const feed = useCallback(() => {
     setState((prev) => {
       const { feedBonus } = getProfile(prev.monster);
-      return {
-        ...prev,
-        hunger:    Math.min(100, prev.hunger + feedBonus),
-        happiness: Math.min(100, prev.happiness + 5),
-      };
+      return { ...prev, hunger: Math.min(100, prev.hunger + feedBonus), happiness: Math.min(100, prev.happiness + 5) };
     });
   }, []);
 
   const play = useCallback(() => {
     setState((prev) => {
       const { playBonus } = getProfile(prev.monster);
-      return {
-        ...prev,
-        happiness: Math.min(100, prev.happiness + playBonus),
-        energy:    Math.max(0,   prev.energy - 15),
-      };
+      return { ...prev, happiness: Math.min(100, prev.happiness + playBonus), energy: Math.max(0, prev.energy - 15) };
     });
   }, []);
 
   const sleep = useCallback(() => {
     setState((prev) => {
       const { sleepBonus } = getProfile(prev.monster);
-      return {
-        ...prev,
-        energy:    Math.min(100, prev.energy + sleepBonus),
-        happiness: Math.min(100, prev.happiness + 5),
-      };
+      return { ...prev, energy: Math.min(100, prev.energy + sleepBonus), happiness: Math.min(100, prev.happiness + 5) };
     });
   }, []);
 
@@ -163,9 +159,9 @@ export function useGame() {
   }, []);
 
   const reset = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(getStorageKey(storageKey));
     setState(INITIAL_STATE);
-  }, []);
+  }, [storageKey]);
 
   return { state, chooseMonster, feed, play, sleep, chatStatEffect, reset };
 }

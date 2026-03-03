@@ -15,7 +15,7 @@ interface FloatItem { id: string; text: string; color: string; }
 
 function App() {
   const { ready, isLoggedIn, userName, storageKey, login, logout } = useAuth();
-  const { state, chooseMonster, feed, play, sleep, chatStatEffect, reset } = useGame();
+  const { state, chooseMonster, feed, play, sleep, chatStatEffect, reset } = useGame(storageKey);
   const { coins, history, floatEvents, spend, earnFromChat, canAfford } = useFruta(storageKey, isLoggedIn);
   const [floatItems, setFloatItems] = useState<FloatItem[]>([]);
 
@@ -37,6 +37,7 @@ function App() {
   }, [chatStatEffect]);
 
   const { messages, memories, isTyping, sendMessage, clearChat } = useChat(
+    storageKey,
     state,
     handleStatEffect,
     earnFromChat,
