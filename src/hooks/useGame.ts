@@ -1,11 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { GameState, Monster, LifeStage } from '../types';
 
+// Decay rates per tick (tick = 5s)
+// Semilla: muere de hambre en ~14 min sin atención
+// Gota:    muere de hambre en ~20 min
+// Chispa:  muere de hambre en ~12 min
 const ELEMENT_PROFILES = {
   semilla: {
-    hungerDecay: 2.0,
-    happinessDecay: 0.8,
-    energyDecay: 1.5,
+    hungerDecay: 0.5,
+    happinessDecay: 0.2,
+    energyDecay: 0.4,
     initialHunger: 85,
     initialHappiness: 80,
     initialEnergy: 75,
@@ -14,9 +18,9 @@ const ELEMENT_PROFILES = {
     sleepBonus: 50,
   },
   gota: {
-    hungerDecay: 1.2,
-    happinessDecay: 2.8,
-    energyDecay: 1.5,
+    hungerDecay: 0.3,
+    happinessDecay: 0.7,
+    energyDecay: 0.4,
     initialHunger: 75,
     initialHappiness: 90,
     initialEnergy: 80,
@@ -25,9 +29,9 @@ const ELEMENT_PROFILES = {
     sleepBonus: 45,
   },
   chispa: {
-    hungerDecay: 2.2,
-    happinessDecay: 0.7,
-    energyDecay: 3.5,
+    hungerDecay: 0.55,
+    happinessDecay: 0.18,
+    energyDecay: 0.9,
     initialHunger: 80,
     initialHappiness: 85,
     initialEnergy: 95,
@@ -91,7 +95,7 @@ export function useGame(storageKey: string) {
   useEffect(() => {
     if (!state.chosen || state.stage === 'dead') return;
 
-    const interval = setInterval(() => {
+    const interval = setInterval(() => { // tick cada 5s
       setState((prev) => {
         const profile = getProfile(prev.monster);
         const newHunger    = Math.max(0, prev.hunger    - profile.hungerDecay);
@@ -110,7 +114,7 @@ export function useGame(storageKey: string) {
 
         return { ...prev, hunger: newHunger, happiness: newHappiness, energy: newEnergy, age: newAge, stage: newStage, lastUpdate: Date.now() };
       });
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [state.chosen, state.stage]);
